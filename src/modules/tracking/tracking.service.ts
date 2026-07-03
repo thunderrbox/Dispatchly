@@ -1,5 +1,6 @@
 import prisma from '../../lib/prisma';
 import { OrderStatus } from '@prisma/client';
+import { sendStatusChangeEmail } from '../notification/notification.service';
 
 // Define valid state machine transitions as per §6
 export const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
@@ -59,7 +60,7 @@ export async function updateStatus(
   }
 
   // Perform update in a transaction
-  return await prisma.$transaction(async (tx) => {
+  const updatedOrder = await prisma.$transaction(async (tx) => {
     const updatedOrder = await tx.order.update({
       where: { id: orderId },
       data: {
@@ -79,6 +80,21 @@ export async function updateStatus(
 
     return updatedOrder;
   });
+
+  // Trigger best-effort email notification
+  try {
+    const customer = await prisma.user.findUnique({
+      where: { id: order.customerId },
+      select: { email: true, name: true },
+    });
+    if (customer) {
+      sendStatusChangeEmail(orderId, oldStatus, newStatus, customer.email, customer.name);
+    }
+  } catch (err) {
+    console.error('Failed to trigger email notification:', err);
+  }
+
+  return updatedOrder;
 }
 
 export async function rescheduleOrder(
@@ -116,7 +132,7 @@ export async function rescheduleOrder(
   }
 
   // Update order: status to RESCHEDULED, clear assigned agent so it goes back to pool
-  return await prisma.$transaction(async (tx) => {
+  const updatedOrder = await prisma.$transaction(async (tx) => {
     const updatedOrder = await tx.order.update({
       where: { id: orderId },
       data: {
@@ -137,4 +153,19 @@ export async function rescheduleOrder(
 
     return updatedOrder;
   });
+
+  // Trigger best-effort email notification for reschedule
+  try {
+    const customer = await prisma.user.findUnique({
+      where: { id: order.customerId },
+      select: { email: true, name: true },
+    });
+    if (customer) {
+      sendStatusChangeEmail(orderId, 'FAILED', 'RESCHEDULED', customer.email, customer.name);
+    }
+  } catch (err) {
+    console.error('Failed to trigger email notification for reschedule:', err);
+  }
+
+  return updatedOrder;
 }
