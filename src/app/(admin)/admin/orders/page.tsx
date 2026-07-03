@@ -15,6 +15,7 @@ interface Order {
   createdAt: string;
   customer: { name: string; email: string };
   assignedAgent?: { user: { name: string } };
+  transactionId?: string;
 }
 
 export default function AdminOrdersPage() {
@@ -171,7 +172,14 @@ export default function AdminOrdersPage() {
                         <span className="text-foreground/35 italic">Unassigned</span>
                       )}
                     </td>
-                    <td className="py-3.5 px-4 text-right font-bold text-accent">₹{order.finalAmount.toFixed(2)}</td>
+                    <td className="py-3.5 px-4 text-right">
+                      <div className="flex flex-col items-end">
+                        <span className="font-bold text-accent">₹{order.finalAmount.toFixed(2)}</span>
+                        {order.transactionId && (
+                          <span className="text-[9px] text-foreground/40 font-mono font-bold mt-0.5">{order.transactionId}</span>
+                        )}
+                      </div>
+                    </td>
                     <td className="py-3.5 px-4 text-center text-xs text-foreground/40">
                       {new Date(order.createdAt).toLocaleDateString(undefined, {
                         month: 'short',

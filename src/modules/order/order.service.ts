@@ -55,6 +55,7 @@ export async function createOrder(input: CreateOrderInput) {
         paymentType: parsed.paymentType,
         finalAmount: rateResult.finalAmount,
         status: 'CREATED',
+        transactionId: parsed.transactionId || null,
         assignedAgentId: null,
       },
     });

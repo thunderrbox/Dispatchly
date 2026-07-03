@@ -114,6 +114,7 @@ model Order {
   assignedAgentId  String?
   assignedAgent    DeliveryAgent?  @relation(fields: [assignedAgentId], references: [id], onDelete: SetNull)
   status           OrderStatus     @default(CREATED)
+  transactionId    String?
   createdAt        DateTime        @default(now())
 
   trackingEvents TrackingEvent[]

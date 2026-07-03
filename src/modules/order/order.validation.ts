@@ -16,4 +16,5 @@ export const CreateOrderSchema = z.object({
   paymentType: z.enum(['PREPAID', 'COD'], {
     errorMap: () => ({ message: 'paymentType must be PREPAID or COD' }),
   }),
+  transactionId: z.string().optional(),
 });

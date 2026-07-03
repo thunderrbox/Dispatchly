@@ -28,6 +28,7 @@ interface Order {
   createdAt: string;
   assignedAgent?: { user: { name: string; email: string } };
   trackingEvents: TrackingEvent[];
+  transactionId?: string | null;
 }
 
 export default function CustomerOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -185,6 +186,11 @@ export default function CustomerOrderDetailPage({ params }: { params: Promise<{ 
                 <div>
                   <span className="text-slate-500 text-xs uppercase font-semibold">Payment Details</span>
                   <p className="text-slate-200 font-semibold">{order.paymentType} • ₹{order.finalAmount.toFixed(2)}</p>
+                  {order.transactionId && (
+                    <p className="text-[10px] text-emerald-600 font-mono mt-1 font-semibold bg-emerald-50 border border-emerald-150 px-2 py-0.5 rounded w-fit">
+                      Txn Ref: {order.transactionId}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

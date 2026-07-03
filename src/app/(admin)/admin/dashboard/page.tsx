@@ -16,6 +16,7 @@ interface Order {
   createdAt: string;
   customer: { name: string; email: string };
   assignedAgent?: { user: { name: string } };
+  transactionId?: string;
 }
 
 interface Agent {
@@ -262,7 +263,14 @@ export default function AdminDashboardPage() {
                             <span className="text-foreground/30 italic">Unassigned</span>
                           )}
                         </td>
-                        <td className="py-3.5 px-3 text-right font-bold text-accent">₹{order.finalAmount.toFixed(2)}</td>
+                         <td className="py-3.5 px-3 text-right">
+                           <div className="flex flex-col items-end font-sans">
+                             <span className="font-bold text-accent">₹{order.finalAmount.toFixed(2)}</span>
+                             {order.transactionId && (
+                               <span className="text-[9px] text-foreground/40 font-mono font-bold mt-0.5">{order.transactionId}</span>
+                             )}
+                           </div>
+                         </td>
                         <td className="py-3.5 px-3 text-right">
                           <motion.button
                             whileHover={{ scale: 1.05 }}
