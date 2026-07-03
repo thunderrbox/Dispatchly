@@ -29,7 +29,9 @@ Dispatchly fixes this by providing automated billing, automated dispatching, and
 
 Dispatchly implements a **Layered Service-Oriented Architecture**:
 
-$$\text{API Route (Controller)} \longrightarrow \text{Business Service (Validations and Logic)} \longrightarrow \text{Prisma Client (Data Access)}$$
+```
+[API Route (Controller)] ──► [Business Service (Validations & Logic)] ──► [Prisma Client (Data Access)]
+```
 
 - **Thin Controllers**: Next.js API Routes parse requests, validate JWT tokens, enforce RBAC, and handle raw HTTP responses.
 - **Service Layer**: House business rules (e.g. rate calculations, Haversine checks, state transitions). Isolated from HTTP details for unit-testing.

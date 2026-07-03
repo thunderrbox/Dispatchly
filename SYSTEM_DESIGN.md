@@ -62,7 +62,9 @@ Failed deliveries require transition audits.
 
 ### State Transitions
 Couriers are restricted by a state machine enforced in the service layer:
-$$\text{CREATED} \rightarrow \text{PICKED\_UP} \rightarrow \text{IN\_TRANSIT} \rightarrow \text{OUT\_FOR\_DELIVERY} \rightarrow \text{FAILED}$$
+```
+CREATED ──► PICKED_UP ──► IN_TRANSIT ──► OUT_FOR_DELIVERY ──► FAILED
+```
 - When a courier encounters an issue, they trigger a transition to `FAILED` from their portal.
 - Direct transitions from other states (e.g., `CREATED` to `FAILED`) are blocked.
 
