@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { DispatchlyLogo } from '../../page';
 
 export default function AgentLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -104,9 +105,9 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
       <aside className="w-64 bg-[#F4EFE6] border-r border-[#1C1C1A]/10 flex flex-col justify-between">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-8">
-            <span className="h-8 w-8 rounded-lg bg-[#E8622C] flex items-center justify-center font-bold text-[#FAF7F2] tracking-wider text-sm">
-              DP
-            </span>
+            <div className="text-[#E8622C]">
+              <DispatchlyLogo className="h-8 w-8" />
+            </div>
             <span className="font-display font-extrabold text-lg text-[#1C1C1A]">
               Dispatchly Agent
             </span>
