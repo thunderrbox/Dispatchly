@@ -389,7 +389,7 @@ Distributed under the MIT License. Developed as a solo CS placement project. Spe
 
 ---
 ---
-
+<!-- 
 # Part C — Metadata & Descriptions
 
 ### 1. Repository Description
@@ -414,4 +414,4 @@ Built on a layered, service-oriented architecture using Next.js 15, Prisma, and 
 - **Automated Dispatching**: A dispatcher engine using the spherical Haversine formula to assign the closest online courier, with active-load tie-breaking.
 - **Audit Compliance**: An immutable, insert-only tracking event timeline that logs order lifecycles and flags admin manual overrides.
 
-Check out the repository to explore the codebase! #NextJS #TypeScript #Prisma #PostgreSQL #Logistics #OpenSource
+Check out the repository to explore the codebase! #NextJS #TypeScript #Prisma #PostgreSQL #Logistics #OpenSource -->
