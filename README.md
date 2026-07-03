@@ -110,7 +110,7 @@ The database seeder is preconfigured with Indian users, localized cities (Uttar 
 
 | Role | Name | Email | Password |
 |---|---|---|---|
-| **Admin** | Rajesh Kumar | `admin@dispatchly.test` | `Admin@123` |
+| **Admin** | Abhijeet Singh Rana | `admin@dispatchly.test` | `Admin@123` |
 | **Customer** | Aarav Sharma | `aarav@dispatchly.test` | `Customer@123` |
 | **Customer** | Priya Patel | `priya@dispatchly.test` | `Customer@123` |
 | **Courier Agent 1 (Online)** | Amit Singh | `amit@dispatchly.test` | `Agent@123` |

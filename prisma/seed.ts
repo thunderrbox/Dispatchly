@@ -23,7 +23,7 @@ async function main() {
   // 3. Create Users with Indian Names
   const admin = await prisma.user.create({
     data: {
-      name: 'Rajesh Kumar',
+      name: 'Abhijeet Singh Rana',
       email: 'admin@dispatchly.test',
       passwordHash: adminPassHash,
       role: 'ADMIN',
