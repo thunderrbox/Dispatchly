@@ -6,42 +6,67 @@
   <!-- Rounded background circle for high contrast in browser tab bar -->
   <circle cx="50" cy="50" r="46" fill="#1C1C1A" />
   
-  <!-- Cheetah Head Profile -->
+  <!-- Dynamic Speed Trails -->
   <path
-    d="M30 52C30 38 48 33 57 33C66 33 75 40 75 52C75 60 68 67 59 69C53 71 47 69 42 66L30 52Z"
+    d="M12 45H27"
+    stroke="#E8622C"
+    strokeWidth="3.5"
+    strokeLinecap="round"
+  />
+  <path
+    d="M15 52H32"
+    stroke="#E8622C"
+    strokeWidth="4.5"
+    strokeLinecap="round"
+  />
+  <path
+    d="M17 59H25"
+    stroke="#E8622C"
+    strokeWidth="3.5"
+    strokeLinecap="round"
+  />
+
+  <!-- Cheetah Body & Head -->
+  <path
+    d="M32 46C40 41 47 43 54 43"
+    stroke="#FAF7F2"
+    strokeWidth="5.5"
+    strokeLinecap="round"
+  />
+  <path
+    d="M54 43C58 39 66 37 73 41C76 43 79 47 77 53C75 57 69 63 62 65C57 66 52 64 48 60"
     fill="#FAF7F2"
   />
-  <!-- Cheetah Tear Line & Eye -->
   <path
-    d="M54 40C56 44 56 50 52 57"
+    d="M60 40L52 33C50 31 54 29 57 32L64 39"
+    stroke="#FAF7F2"
+    strokeWidth="4.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  />
+
+  <!-- Tear Line & Eye -->
+  <path
+    d="M69 46C70 49 69 54 65 58"
     stroke="#1C1C1A"
-    strokeWidth="2.5"
+    strokeWidth="2"
     strokeLinecap="round"
   />
-  <circle cx="50" cy="42" r="2.5" fill="#1C1C1A" />
+  <circle cx="65" cy="46" r="2" fill="#1C1C1A" />
 
-  <!-- Running Speed Trails -->
+  <!-- Falcon/Leopard Wings -->
   <path
-    d="M20 44H33"
-    stroke="#E8622C"
-    strokeWidth="3.5"
-    strokeLinecap="round"
+    d="M44 43C32 36 22 21 30 16C35 13 42 23 47 36Z"
+    fill="#E8622C"
   />
   <path
-    d="M16 52H31"
-    stroke="#E8622C"
-    strokeWidth="3.5"
-    strokeLinecap="round"
-  />
-  <path
-    d="M18 60H28"
-    stroke="#E8622C"
-    strokeWidth="3.5"
-    strokeLinecap="round"
+    d="M50 43C40 36 32 25 38 21C42 19 47 29 51 38Z"
+    fill="#FAF7F2"
+    opacity="0.85"
   />
 
-  <!-- Parcel Box -->
-  <rect x="60" y="54" width="16" height="16" rx="3" fill="#E8622C" />
-  <path d="M68 54V70" stroke="#FAF7F2" strokeWidth="1.5" />
-  <path d="M60 62H76" stroke="#FAF7F2" strokeWidth="1.5" />
+  <!-- Speeding 3D Parcel Box -->
+  <rect x="63" y="55" width="22" height="22" rx="4" fill="#E8622C" stroke="#FAF7F2" strokeWidth="2.5" />
+  <path d="M63 61H85" stroke="#FAF7F2" strokeWidth="1.5" />
+  <path d="M74 61V77" stroke="#FAF7F2" strokeWidth="1.5" />
 </svg>
