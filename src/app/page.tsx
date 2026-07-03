@@ -12,13 +12,13 @@ export const DispatchlyLogo = ({ className = "h-8 w-8" }: { className?: string }
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    {/* High contrast background emblem badge */}
-    <rect x="5" y="5" width="90" height="90" rx="22" fill="currentColor" />
+    {/* High contrast background emblem badge (always brand charcoal) */}
+    <rect x="5" y="5" width="90" height="90" rx="22" fill="#1C1C1A" />
     
-    {/* Running Speed Trails inside the badge */}
+    {/* Running Speed Trails inside the badge (always brand cream) */}
     <motion.path
       d="M18 36H32"
-      stroke="var(--background)"
+      stroke="#FAF7F2"
       strokeWidth="4"
       strokeLinecap="round"
       animate={{ x: [0, -3, 0], opacity: [0.5, 0.9, 0.5] }}
@@ -26,7 +26,7 @@ export const DispatchlyLogo = ({ className = "h-8 w-8" }: { className?: string }
     />
     <motion.path
       d="M12 48H32"
-      stroke="var(--background)"
+      stroke="#FAF7F2"
       strokeWidth="5"
       strokeLinecap="round"
       animate={{ x: [0, -5, 0] }}
@@ -34,39 +34,39 @@ export const DispatchlyLogo = ({ className = "h-8 w-8" }: { className?: string }
     />
     <motion.path
       d="M15 60H28"
-      stroke="var(--background)"
+      stroke="#FAF7F2"
       strokeWidth="4"
       strokeLinecap="round"
       animate={{ x: [0, -3, 0], opacity: [0.5, 0.9, 0.5] }}
       transition={{ repeat: Infinity, duration: 1, delay: 0.4, ease: "easeInOut" }}
     />
 
-    {/* Cheetah Head Silhouette */}
+    {/* Cheetah Head Silhouette (always brand cream) */}
     <path
       d="M32 54C32 40 46 32 60 32C72 32 82 40 82 52C82 60 76 66 68 68C62 70 56 68 50 64 L32 54Z"
-      fill="var(--background)"
+      fill="#FAF7F2"
     />
     
     {/* Cheetah Ear */}
     <path
       d="M50 32L40 18C38 15 44 12 48 15L56 29"
-      stroke="var(--background)"
+      stroke="#FAF7F2"
       strokeWidth="4.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
 
-    {/* Big high-contrast cheetah eye */}
-    <circle cx="64" cy="44" r="3.5" fill="currentColor" />
+    {/* Big high-contrast cheetah eye (always brand charcoal) */}
+    <circle cx="64" cy="44" r="3.5" fill="#1C1C1A" />
 
-    {/* High contrast orange delivery package */}
+    {/* High contrast orange delivery package (always brand orange and charcoal outlines) */}
     <motion.g
       animate={{ y: [0, -2, 0] }}
       transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
     >
-      <rect x="62" y="52" width="24" height="24" rx="5" fill="var(--accent)" stroke="currentColor" strokeWidth="2.5" />
-      <path d="M62 60H86" stroke="var(--background)" strokeWidth="2" />
-      <path d="M74 60V76" stroke="var(--background)" strokeWidth="2" />
+      <rect x="62" y="52" width="24" height="24" rx="5" fill="#E8622C" stroke="#1C1C1A" strokeWidth="2.5" />
+      <path d="M62 60H86" stroke="#FAF7F2" strokeWidth="2" />
+      <path d="M74 60V76" stroke="#FAF7F2" strokeWidth="2" />
     </motion.g>
   </svg>
 );
