@@ -1,41 +1,69 @@
-# Dispatchly
+# Dispatchly — Smart Last-Mile Delivery Log
 
-Dispatchly is a last-mile delivery tracking and logistics orchestration platform. The system automates shipment creation, calculates pricing cards using volumetric algorithms, matches available courier agents using geodesic Haversine lookups, and tracks parcel lifecycles inside an immutable tracking ledger.
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?style=for-the-badge&logo=postgresql)](https://www.postgresql.org)
+[![Prisma](https://img.shields.io/badge/Prisma-6-black?style=for-the-badge&logo=prisma)](https://www.prisma.io)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com)
+[![Vercel](https://img.shields.io/badge/Vercel-Deployment-black?style=for-the-badge&logo=vercel)](https://vercel.com)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-## Project Overview
+**Smart delivery orchestration, from rate to doorstep.**
 
-Logistics operators require precision in billing, assignment, and tracking. Dispatchly addresses these core issues:
-- **Pricing Leakage**: Bulgarian or bulky, light parcels are correctly charged by volume rather than raw mass.
-- **Dispatch Lag**: Equidistant available couriers are auto-matched based on GPS metrics and active load counts.
-- **Audit Trails**: History remains locked in an insert-only event table, preventing post-delivery state manipulation.
+Dispatchly is a high-performance, full-stack logistics portal designed to solve the structural opacity and coordination overhead of last-mile delivery. Utilizing a clean, layered service-oriented architecture, it automates parcel pricing via exact volumetric calculation cards, routes courier matching using GPS-nearest Haversine sorting, and logs every delivery transition inside an immutable tracking log with audit override tracks.
 
-## Solution Architecture
+---
 
-Dispatchly utilizes a clean, **Layered Service-Oriented Architecture**:
+## 1. The Business Problem
 
-```
-[Next.js API Route (Controller)] ──► [Service Layer (Business Rules)] ──► [Prisma Client (ORM)]
-```
+Logistics operators struggle with three core issues in last-mile delivery:
+- **Rate Surcharge Opacity**: Shipments are often incorrectly billed due to failure to account for dimensions (volumetric weight) vs. actual weight, causing margin leaks on large, lightweight items.
+- **Assignment Delays**: Manually identifying and dispatching agents to pickup points leads to bottlenecks, unequal workloads, and high transit times.
+- **Audit Tampering**: Operators lack a secure, chronological ledger of parcel history, making it difficult to analyze failed deliveries, customer claims, or dispatch mistakes.
 
-### Key Decisions
-- **Thin Controllers**: API routes are solely responsible for parsing parameters, validating payloads using Zod schemas, checking user JWT privileges, and handling HTTP status codes.
-- **Dedicated Service Layer**: All core algorithms—rate pricing, Haversine checks, state machine transitions, and database queries—reside inside testable service files. This keeps logic isolated from Next.js server details.
-- **No Repository Layer**: We interface directly with Prisma Client. Introducing a repository abstraction layer on top of Prisma would add redundant overhead without providing real benefits at this scale.
+Dispatchly fixes this by providing automated billing, automated dispatching, and an immutable tracking event timeline.
 
-## Technology Stack
+---
 
-- **Framework**: Next.js 15 (App Router, Turbopack integration)
-- **Styling**: Tailwind CSS v4
-- **Language**: TypeScript
-- **Database**: PostgreSQL (hosted on Neon Serverless)
-- **Data Access**: Prisma ORM
-- **Authentication**: Stateless JWT + Role-Based Access Control (RBAC)
-- **Validation**: Zod
-- **Notifications**: Resend SDK (Email Client)
-- **Animation**: Framer Motion
-- **Unit Testing**: Vitest
+## 2. Solution Architecture
 
-## Installation & Setup
+Dispatchly implements a **Layered Service-Oriented Architecture**:
+
+$$\text{API Route (Controller)} \longrightarrow \text{Business Service (Validations and Logic)} \longrightarrow \text{Prisma Client (Data Access)}$$
+
+- **Thin Controllers**: Next.js API Routes parse requests, validate JWT tokens, enforce RBAC, and handle raw HTTP responses.
+- **Service Layer**: House business rules (e.g. rate calculations, Haversine checks, state transitions). Isolated from HTTP details for unit-testing.
+- **Prisma ORM**: Directly manages the database access. There is **no repository-interface layer** on top of Prisma; doing so would introduce redundant boilerplate without adding value at this scale.
+
+---
+
+## 3. Major Features
+
+- **Pricing Engine**: Checks category (B2B/B2C), route type (intra/inter zone), billable weights, and COD flat charges in a pure, testable function.
+- **Haversine Matcher**: Queries online couriers, calculates geodesic distance, and auto-assigns the nearest candidate.
+- **Tie-Breaker Dispatch**: Evaluates active delivery loads to prevent courier burnout.
+- **Immutable Log**: Logs every status transition to an insert-only tracking ledger.
+- **Admin Overrides**: Empowers dispatchers to fix state mistakes while explicitly flagging overrides (`isOverride = true`).
+- **Role-Based Portals**: Displays clean workspaces customized for Customers, Courier Agents, and Admin dispatchers.
+- **Resend Mail Notifications**: Triggers HTML update letters on every status transition.
+
+---
+
+## 4. Screenshots
+
+| Public Landing Page | Customer Booking Hub |
+|:---:|:---:|
+| ![Landing Page](./docs/screenshots/landing.png) | ![Customer Hub](./docs/screenshots/customer_hub.png) |
+
+| Admin Dispatch Console | Courier Duty Portal |
+|:---:|:---:|
+| ![Admin Dashboard](./docs/screenshots/admin_dashboard.png) | ![Courier Portal](./docs/screenshots/courier_portal.png) |
+
+*(Note: Place your screenshots inside `/docs/screenshots/` in your repository).*
+
+---
+
+## 5. Installation & Setup
 
 ### 1. Prerequisites
 - Node.js (v18.0.0 or higher)
@@ -70,7 +98,7 @@ npm run dev
 
 ---
 
-## Test Logins & Regions (India / Uttar Pradesh Focus)
+## 6. Test Logins & Regions (India / Uttar Pradesh Focus)
 
 The database seeder is preconfigured with Indian users, localized cities (Uttar Pradesh & NCR), and mock transactions:
 
@@ -91,7 +119,7 @@ The database seeder is preconfigured with Indian users, localized cities (Uttar 
 
 ---
 
-## Core Algorithms & Logic
+## 7. Core Algorithms & Logic
 
 ### 1. Volumetric Rate Calculation
 Parcels are evaluated by both scale weight and physical size. The engine computes:
@@ -115,7 +143,7 @@ Order statuses follow a strict sequence of transitions:
 
 ---
 
-## Database Schema Summary
+## 8. Database Schema Summary
 
 - **User**: Contains core credentials, role type (`CUSTOMER`, `AGENT`, `ADMIN`), and password hashes.
 - **Zone & Area**: Represents regional hierarchies. One Zone can contain multiple Areas.
@@ -126,7 +154,7 @@ Order statuses follow a strict sequence of transitions:
 
 ---
 
-## API Reference
+## 9. API Reference
 
 ### Public Routes
 - `POST /api/auth/register` - Create user.
@@ -151,7 +179,7 @@ Order statuses follow a strict sequence of transitions:
 
 ---
 
-## Running Unit Tests
+## 10. Running Unit Tests
 
 The rate engine's mathematical rules are verified via unit tests:
 ```bash
@@ -160,7 +188,7 @@ npm test
 
 ---
 
-## Technical Design Tradeoffs & Interview Prep
+## 11. Technical Design Tradeoffs & Interview Prep
 
 ### 1. Stateless JWT Sessions vs. Database Sessions
 - **Tradeoff**: We use stateless, 7-day JWT tokens stored in localStorage. This eliminates session table reads on every API call, making operations fast. 
@@ -173,3 +201,9 @@ npm test
 ### 3. Nearest-Neighbor Haversine vs. Routing API (OSRM)
 - **Tradeoff**: We calculate geographic distance as a straight line on a sphere rather than querying real road routing matrices.
 - **Why**: Haversine computes in microseconds with zero external API dependencies or network latency, serving as an excellent MVP approximation. In production, this would serve as a pre-filtering layer before calling a mapping service like OSRM or Google Maps.
+
+---
+
+## 12. Developer Profile
+Developed by **Abhijeet Singh Rana** (Senior Software Engineer / Placement Candidate).
+- Focus areas: High-performance microservices, spatial query optimization, and distributed transaction state machines.
