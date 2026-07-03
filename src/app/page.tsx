@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Stylized geometric elephant mascot logo carrying a parcel
+// Stylized interactive geometric Cheetah mascot logo carrying a parcel
 export const DispatchlyLogo = ({ className = "h-8 w-8" }: { className?: string }) => (
   <svg
     viewBox="0 0 100 100"
@@ -12,29 +12,56 @@ export const DispatchlyLogo = ({ className = "h-8 w-8" }: { className?: string }
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    {/* Stylized Ear (Minimalist Arc) */}
+    {/* Cheetah Head Profile */}
     <path
-      d="M32 28C14 28 14 58 32 58C38 58 42 52 42 43C42 34 38 28 32 28Z"
+      d="M25 50C25 35 45 30 55 30C65 30 75 38 75 50C75 58 68 65 58 68C52 70 45 68 40 65L25 50Z"
       fill="currentColor"
-      opacity="0.85"
     />
-    {/* Stylized Head (Solid Base) */}
-    <circle cx="50" cy="45" r="18" fill="currentColor" />
-    {/* Trunk curled carrying a package */}
+    {/* Cheetah Tear Line & Eye */}
     <path
-      d="M62 43C72 43 78 52 68 62C62 67 58 72 60 76C62 80 68 80 71 76C76 68 80 52 66 38"
-      stroke="currentColor"
-      strokeWidth="4.5"
+      d="M52 38C54 42 54 48 50 55"
+      stroke="var(--background)"
+      strokeWidth="2.5"
       strokeLinecap="round"
-      strokeLinejoin="round"
     />
-    {/* Mascot Eye */}
-    <circle cx="46" cy="40" r="2.5" fill="var(--background)" />
-    {/* The parcel box being carried */}
-    <rect x="66" y="66" width="13" height="13" rx="2" fill="var(--accent)" />
-    {/* Box ribbon details */}
-    <path d="M72.5 66V79" stroke="var(--background)" strokeWidth="1" />
-    <path d="M66 72.5H79" stroke="var(--background)" strokeWidth="1" />
+    <circle cx="48" cy="40" r="2.5" fill="var(--background)" />
+
+    {/* Running Speed Whisker Trails */}
+    <motion.path
+      d="M15 42H30"
+      stroke="currentColor"
+      strokeWidth="3.5"
+      strokeLinecap="round"
+      animate={{ x: [0, -4, 0] }}
+      transition={{ repeat: Infinity, duration: 0.8, ease: "easeInOut" }}
+    />
+    <motion.path
+      d="M10 50H28"
+      stroke="currentColor"
+      strokeWidth="3.5"
+      strokeLinecap="round"
+      animate={{ x: [0, -6, 0] }}
+      transition={{ repeat: Infinity, duration: 0.8, delay: 0.15, ease: "easeInOut" }}
+    />
+    <motion.path
+      d="M13 58H25"
+      stroke="currentColor"
+      strokeWidth="3.5"
+      strokeLinecap="round"
+      animate={{ x: [0, -4, 0] }}
+      transition={{ repeat: Infinity, duration: 0.8, delay: 0.3, ease: "easeInOut" }}
+    />
+
+    {/* Speeding Parcel Box */}
+    <motion.g
+      animate={{ y: [0, -3, 0] }}
+      transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+    >
+      <rect x="58" y="52" width="18" height="18" rx="3" fill="var(--accent)" />
+      {/* Box ribbons */}
+      <path d="M67 52V70" stroke="var(--background)" strokeWidth="1.5" />
+      <path d="M58 61H76" stroke="var(--background)" strokeWidth="1.5" />
+    </motion.g>
   </svg>
 );
 
