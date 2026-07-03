@@ -3,70 +3,49 @@
   fill="none"
   xmlns="http://www.w3.org/2000/svg"
 >
-  <!-- Rounded background circle for high contrast in browser tab bar -->
-  <circle cx="50" cy="50" r="46" fill="#1C1C1A" />
+  <!-- High contrast background emblem badge -->
+  <rect x="5" y="5" width="90" height="90" rx="22" fill="#1C1C1A" />
   
-  <!-- Dynamic Speed Trails -->
+  <!-- Running Speed Trails inside the badge -->
   <path
-    d="M12 45H27"
-    stroke="#E8622C"
-    strokeWidth="3.5"
+    d="M18 36H32"
+    stroke="#FAF7F2"
+    strokeWidth="4"
     strokeLinecap="round"
   />
   <path
-    d="M15 52H32"
-    stroke="#E8622C"
-    strokeWidth="4.5"
+    d="M12 48H32"
+    stroke="#FAF7F2"
+    strokeWidth="5"
     strokeLinecap="round"
   />
   <path
-    d="M17 59H25"
-    stroke="#E8622C"
-    strokeWidth="3.5"
+    d="M15 60H28"
+    stroke="#FAF7F2"
+    strokeWidth="4"
     strokeLinecap="round"
   />
 
-  <!-- Cheetah Body & Head -->
+  <!-- Cheetah Head Silhouette -->
   <path
-    d="M32 46C40 41 47 43 54 43"
-    stroke="#FAF7F2"
-    strokeWidth="5.5"
-    strokeLinecap="round"
-  />
-  <path
-    d="M54 43C58 39 66 37 73 41C76 43 79 47 77 53C75 57 69 63 62 65C57 66 52 64 48 60"
+    d="M32 54C32 40 46 32 60 32C72 32 82 40 82 52C82 60 76 66 68 68C62 70 56 68 50 64 L32 54Z"
     fill="#FAF7F2"
   />
+  
+  <!-- Cheetah Ear -->
   <path
-    d="M60 40L52 33C50 31 54 29 57 32L64 39"
+    d="M50 32L40 18C38 15 44 12 48 15L56 29"
     stroke="#FAF7F2"
     strokeWidth="4.5"
     strokeLinecap="round"
     strokeLinejoin="round"
   />
 
-  <!-- Tear Line & Eye -->
-  <path
-    d="M69 46C70 49 69 54 65 58"
-    stroke="#1C1C1A"
-    strokeWidth="2"
-    strokeLinecap="round"
-  />
-  <circle cx="65" cy="46" r="2" fill="#1C1C1A" />
+  <!-- Big high-contrast cheetah eye -->
+  <circle cx="64" cy="44" r="3.5" fill="#1C1C1A" />
 
-  <!-- Falcon/Leopard Wings -->
-  <path
-    d="M44 43C32 36 22 21 30 16C35 13 42 23 47 36Z"
-    fill="#E8622C"
-  />
-  <path
-    d="M50 43C40 36 32 25 38 21C42 19 47 29 51 38Z"
-    fill="#FAF7F2"
-    opacity="0.85"
-  />
-
-  <!-- Speeding 3D Parcel Box -->
-  <rect x="63" y="55" width="22" height="22" rx="4" fill="#E8622C" stroke="#FAF7F2" strokeWidth="2.5" />
-  <path d="M63 61H85" stroke="#FAF7F2" strokeWidth="1.5" />
-  <path d="M74 61V77" stroke="#FAF7F2" strokeWidth="1.5" />
+  <!-- High contrast orange delivery package -->
+  <rect x="62" y="52" width="24" height="24" rx="5" fill="#E8622C" stroke="#1C1C1A" strokeWidth="2.5" />
+  <path d="M62 60H86" stroke="#FAF7F2" strokeWidth="2" />
+  <path d="M74 60V76" stroke="#FAF7F2" strokeWidth="2" />
 </svg>

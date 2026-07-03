@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Stylized interactive geometric Winged Delivery Cheetah mascot logo carrying a parcel
+// Stylized interactive geometric high-visibility Cheetah mascot logo carrying a parcel
 export const DispatchlyLogo = ({ className = "h-8 w-8" }: { className?: string }) => (
   <svg
     viewBox="0 0 100 100"
@@ -12,85 +12,61 @@ export const DispatchlyLogo = ({ className = "h-8 w-8" }: { className?: string }
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    {/* Dynamic Speed Trails */}
+    {/* High contrast background emblem badge */}
+    <rect x="5" y="5" width="90" height="90" rx="22" fill="currentColor" />
+    
+    {/* Running Speed Trails inside the badge */}
     <motion.path
-      d="M5 45H20"
-      stroke="currentColor"
-      strokeWidth="3.5"
+      d="M18 36H32"
+      stroke="var(--background)"
+      strokeWidth="4"
       strokeLinecap="round"
-      animate={{ x: [0, -5, 0], opacity: [0.4, 0.8, 0.4] }}
-      transition={{ repeat: Infinity, duration: 0.8, ease: "easeInOut" }}
+      animate={{ x: [0, -3, 0], opacity: [0.5, 0.9, 0.5] }}
+      transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }}
     />
     <motion.path
-      d="M8 52H25"
-      stroke="currentColor"
-      strokeWidth="4.5"
+      d="M12 48H32"
+      stroke="var(--background)"
+      strokeWidth="5"
       strokeLinecap="round"
-      animate={{ x: [0, -7, 0], opacity: [0.6, 1, 0.6] }}
-      transition={{ repeat: Infinity, duration: 0.8, delay: 0.15, ease: "easeInOut" }}
+      animate={{ x: [0, -5, 0] }}
+      transition={{ repeat: Infinity, duration: 1, delay: 0.2, ease: "easeInOut" }}
     />
     <motion.path
-      d="M10 59H18"
-      stroke="currentColor"
-      strokeWidth="3.5"
+      d="M15 60H28"
+      stroke="var(--background)"
+      strokeWidth="4"
       strokeLinecap="round"
-      animate={{ x: [0, -4, 0], opacity: [0.3, 0.7, 0.3] }}
-      transition={{ repeat: Infinity, duration: 0.8, delay: 0.3, ease: "easeInOut" }}
+      animate={{ x: [0, -3, 0], opacity: [0.5, 0.9, 0.5] }}
+      transition={{ repeat: Infinity, duration: 1, delay: 0.4, ease: "easeInOut" }}
     />
 
-    {/* Cheetah Body & Head */}
+    {/* Cheetah Head Silhouette */}
     <path
-      d="M25 46C33 41 40 43 47 43"
-      stroke="currentColor"
-      strokeWidth="5.5"
-      strokeLinecap="round"
+      d="M32 54C32 40 46 32 60 32C72 32 82 40 82 52C82 60 76 66 68 68C62 70 56 68 50 64 L32 54Z"
+      fill="var(--background)"
     />
+    
+    {/* Cheetah Ear */}
     <path
-      d="M47 43C51 39 59 37 66 41C69 43 72 47 70 53C68 57 62 63 55 65C50 66 45 64 41 60"
-      fill="currentColor"
-    />
-    <path
-      d="M53 40L45 33C43 31 47 29 50 32L57 39"
-      stroke="currentColor"
+      d="M50 32L40 18C38 15 44 12 48 15L56 29"
+      stroke="var(--background)"
       strokeWidth="4.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
 
-    {/* Tear Line & Eye */}
-    <path
-      d="M62 46C63 49 62 54 58 58"
-      stroke="var(--background)"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-    <circle cx="58" cy="46" r="2" fill="var(--background)" />
+    {/* Big high-contrast cheetah eye */}
+    <circle cx="64" cy="44" r="3.5" fill="currentColor" />
 
-    {/* Dynamic Flapping Falcon/Leopard Wings */}
-    <motion.path
-      d="M37 43C25 36 15 21 23 16C28 13 35 23 40 36Z"
-      fill="var(--accent)"
-      animate={{ rotate: [-2, 4, -2], y: [0, -2, 0] }}
-      transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
-      style={{ originX: 0.4, originY: 0.4 }}
-    />
-    <motion.path
-      d="M43 43C33 36 25 25 31 21C35 19 40 29 44 38Z"
-      fill="currentColor"
-      opacity="0.8"
-      animate={{ rotate: [-2, 3, -2], y: [0, -1, 0] }}
-      transition={{ repeat: Infinity, duration: 1.2, delay: 0.1, ease: "easeInOut" }}
-      style={{ originX: 0.45, originY: 0.45 }}
-    />
-
-    {/* Speeding 3D Parcel Box */}
+    {/* High contrast orange delivery package */}
     <motion.g
       animate={{ y: [0, -2, 0] }}
-      transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+      transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
     >
-      <rect x="56" y="55" width="22" height="22" rx="4" fill="var(--accent)" stroke="currentColor" strokeWidth="2.5" />
-      <path d="M56 61H78" stroke="var(--background)" strokeWidth="1.5" />
-      <path d="M67 61V77" stroke="var(--background)" strokeWidth="1.5" />
+      <rect x="62" y="52" width="24" height="24" rx="5" fill="var(--accent)" stroke="currentColor" strokeWidth="2.5" />
+      <path d="M62 60H86" stroke="var(--background)" strokeWidth="2" />
+      <path d="M74 60V76" stroke="var(--background)" strokeWidth="2" />
     </motion.g>
   </svg>
 );
