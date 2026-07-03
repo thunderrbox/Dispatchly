@@ -26,3 +26,84 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display), system-ui, sans-serif;
 }
+
+/* Theme-aware overrides for legacy hardcoded Tailwind dark classes */
+.bg-slate-900\/60, 
+.bg-slate-900, 
+.bg-slate-900\/40 {
+  background-color: var(--sidebar-background) !important;
+  border-color: rgba(28, 28, 26, 0.15) !important;
+}
+.bg-slate-950, 
+.bg-slate-950\/50, 
+.bg-slate-950\/60 {
+  background-color: var(--background) !important;
+  border-color: rgba(28, 28, 26, 0.15) !important;
+}
+.border-slate-800, 
+.border-slate-850 {
+  border-color: rgba(28, 28, 26, 0.15) !important;
+}
+.text-slate-100, 
+.text-slate-200, 
+.text-slate-300, 
+.text-slate-350 {
+  color: var(--foreground) !important;
+}
+.text-slate-400 {
+  color: var(--foreground) !important;
+  opacity: 0.75;
+}
+.text-slate-500 {
+  color: var(--foreground) !important;
+  opacity: 0.55;
+}
+.text-slate-600 {
+  color: var(--foreground) !important;
+  opacity: 0.4;
+}
+.bg-slate-850 {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  border-color: rgba(28, 28, 26, 0.15) !important;
+}
+.bg-slate-850\/10:hover, 
+.hover\:bg-slate-850\/20:hover {
+  background-color: rgba(28, 28, 26, 0.03) !important;
+}
+.bg-violet-600, 
+.bg-violet-650, 
+.bg-violet-500 {
+  background-color: var(--accent) !important;
+  color: var(--background) !important;
+}
+.text-violet-400, 
+.text-violet-450 {
+  color: var(--accent) !important;
+}
+.bg-violet-500\/10 {
+  background-color: rgba(232, 98, 44, 0.1) !important;
+  color: var(--accent) !important;
+}
+.border-violet-500\/20, 
+.border-violet-500\/15 {
+  border-color: rgba(232, 98, 44, 0.2) !important;
+}
+
+/* Ensure inputs and selects are readable */
+input, select, textarea {
+  color: var(--foreground) !important;
+}
+option {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
+/* Title gradient override to use solid ink */
+.bg-gradient-to-r.from-violet-400.to-indigo-400,
+.bg-gradient-to-r.from-white.via-slate-100.to-slate-400 {
+  background-image: none !important;
+  background-clip: unset !important;
+  -webkit-background-clip: unset !important;
+  color: var(--foreground) !important;
+}

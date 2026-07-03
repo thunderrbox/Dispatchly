@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 interface Agent {
   id: string;
@@ -104,7 +105,7 @@ export default function AdminAgentsPage() {
 
       fetchAgents();
     } catch (err: any) {
-      setError(err.message || 'Failed to update availability');
+      setError(err.message || 'Failed to toggle availability');
     }
   };
 
@@ -112,14 +113,14 @@ export default function AdminAgentsPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-display font-extrabold tracking-tight text-foreground">
           Delivery Agents
         </h1>
-        <p className="text-slate-400 text-sm mt-1">Monitor availability, location coordinates and workloads</p>
+        <p className="text-foreground/60 text-sm mt-1">Monitor availability, location coordinates and workloads</p>
       </div>
 
       {error && (
-        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-450 text-sm p-4 rounded-xl font-medium">
+        <div className="bg-rose-50 border border-rose-200 text-rose-600 text-sm p-4 rounded-xl font-medium">
           {error}
         </div>
       )}
@@ -127,64 +128,68 @@ export default function AdminAgentsPage() {
       {/* Agents Load Grid */}
       {loading ? (
         <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-violet-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent mx-auto"></div>
         </div>
       ) : agents.length === 0 ? (
-        <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl text-center text-slate-500">
+        <div className="bg-white border border-foreground/10 p-6 rounded-2xl text-center text-foreground/40">
           No delivery agents registered in the system yet.
         </div>
       ) : (
         <div className="grid md:grid-cols-3 gap-8">
           {/* List panel */}
-          <div className="md:col-span-2 bg-slate-900/60 backdrop-blur-xl border border-slate-800 p-6 rounded-2xl space-y-4">
-            <h2 className="text-xl font-bold text-slate-100">Agent Directory</h2>
-            <div className="divide-y divide-slate-800/50">
+          <div className="md:col-span-2 bg-white border border-foreground/10 p-6 rounded-2xl shadow-sm space-y-4">
+            <h2 className="text-xl font-display font-bold text-foreground">Agent Directory</h2>
+            <div className="divide-y divide-foreground/5">
               {agents.map((agent) => (
-                <div key={agent.id} className="py-4 flex justify-between items-start gap-4">
+                <div key={agent.id} className="py-4 flex justify-between items-start gap-4 text-foreground/80">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-200">{agent.name}</span>
+                      <span className="font-bold text-foreground text-sm">{agent.name}</span>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                           agent.available
-                            ? 'bg-emerald-500/10 text-emerald-450 border border-emerald-500/25'
-                            : 'bg-rose-500/10 text-rose-450 border border-rose-500/25'
+                            ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                            : 'bg-rose-50 text-rose-600 border border-rose-200'
                         }`}
                       >
                         {agent.available ? 'Available' : 'Offline'}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500">{agent.email}</p>
-                    <p className="text-xs text-slate-400">
-                      Location: <span className="font-mono text-violet-300">{agent.currentLatitude.toFixed(4)}, {agent.currentLongitude.toFixed(4)}</span>
+                    <p className="text-xs text-foreground/50">{agent.email}</p>
+                    <p className="text-xs text-foreground/60">
+                      Location: <span className="font-mono text-accent font-semibold">{agent.currentLatitude.toFixed(4)}, {agent.currentLongitude.toFixed(4)}</span>
                     </p>
                   </div>
                   
                   <div className="flex flex-col items-end gap-2 text-xs">
-                    <span className="bg-slate-950/60 text-slate-350 px-2.5 py-1 rounded-lg border border-slate-800 font-semibold">
+                    <span className="bg-background text-foreground/75 px-2.5 py-1 rounded-lg border border-foreground/10 font-bold">
                       {agent.activeOrderCount} Active Load
                     </span>
                     <div className="flex gap-2">
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
                         onClick={() => {
                           setEditingAgent(agent);
                           setNewLat(agent.currentLatitude.toString());
                           setNewLng(agent.currentLongitude.toString());
                         }}
-                        className="py-1 px-2.5 bg-slate-850 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-md font-semibold transition-all"
+                        className="py-1.5 px-3 bg-background hover:bg-foreground/5 border border-foreground/10 text-foreground rounded-lg font-bold transition-all cursor-pointer"
                       >
                         Edit GPS
-                      </button>
-                      <button
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
                         onClick={() => handleToggleAvailability(agent)}
-                        className={`py-1 px-2.5 rounded-md font-semibold transition-all border ${
+                        className={`py-1.5 px-3 rounded-lg font-bold transition-all border cursor-pointer ${
                           agent.available
-                            ? 'bg-rose-600/10 hover:bg-rose-600 border-rose-550/20 text-rose-400 hover:text-white'
-                            : 'bg-emerald-600/10 hover:bg-emerald-600 border-emerald-550/20 text-emerald-400 hover:text-white'
+                            ? 'bg-rose-50 hover:bg-rose-600 border-rose-200 text-rose-600 hover:text-white'
+                            : 'bg-emerald-50 hover:bg-emerald-600 border-emerald-200 text-emerald-600 hover:text-white'
                         }`}
                       >
                         {agent.available ? 'Go Offline' : 'Go Online'}
-                      </button>
+                      </motion.button>
                     </div>
                   </div>
                 </div>
@@ -194,13 +199,13 @@ export default function AdminAgentsPage() {
 
           {/* Quick Edit GPS Side panel */}
           {editingAgent && (
-            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-850 p-6 rounded-2xl space-y-4 h-fit">
-              <h2 className="text-lg font-bold text-slate-100">Update GPS Coordinate</h2>
-              <p className="text-xs text-slate-400">Modifying GPS coordinates for agent <span className="font-bold text-violet-400">{editingAgent.name}</span></p>
+            <div className="bg-white border border-foreground/10 p-6 rounded-2xl shadow-sm space-y-4 h-fit">
+              <h2 className="text-lg font-display font-bold text-foreground">Update GPS Coordinate</h2>
+              <p className="text-xs text-foreground/60">Modifying GPS coordinates for agent <span className="font-bold text-accent">{editingAgent.name}</span></p>
               
               <form onSubmit={handleUpdateAgentProfile} className="space-y-4">
                 <div>
-                  <label className="block text-slate-500 text-[10px] font-semibold uppercase tracking-wider mb-2">
+                  <label className="block text-foreground/50 text-[10px] font-bold uppercase tracking-wider mb-2">
                     Latitude
                   </label>
                   <input
@@ -209,11 +214,11 @@ export default function AdminAgentsPage() {
                     required
                     value={newLat}
                     onChange={(e) => setNewLat(e.target.value)}
-                    className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-violet-500 text-white font-mono"
+                    className="w-full bg-background border border-foreground/10 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-accent text-foreground font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-500 text-[10px] font-semibold uppercase tracking-wider mb-2">
+                  <label className="block text-foreground/50 text-[10px] font-bold uppercase tracking-wider mb-2">
                     Longitude
                   </label>
                   <input
@@ -222,24 +227,28 @@ export default function AdminAgentsPage() {
                     required
                     value={newLng}
                     onChange={(e) => setNewLng(e.target.value)}
-                    className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-violet-500 text-white font-mono"
+                    className="w-full bg-background border border-foreground/10 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-accent text-foreground font-mono"
                   />
                 </div>
-                <div className="flex gap-2">
-                  <button
+                <div className="flex gap-2 pt-2">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={() => setEditingAgent(null)}
-                    className="flex-1 py-2.5 bg-slate-850 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition-all"
+                    className="flex-1 py-2 bg-background hover:bg-foreground/5 border border-foreground/10 text-foreground rounded-lg text-xs font-bold transition-all cursor-pointer"
                   >
                     Cancel
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={updating}
-                    className="flex-1 py-2.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl text-xs font-semibold transition-all active:scale-[0.98]"
+                    className="flex-1 py-2 bg-[#E8622C] hover:opacity-90 text-[#FAF7F2] rounded-lg text-xs font-bold transition-all disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
                   >
                     {updating ? 'Saving...' : 'Save Location'}
-                  </button>
+                  </motion.button>
                 </div>
               </form>
             </div>

@@ -70,6 +70,27 @@ npm run dev
 
 ---
 
+## Test Logins & Regions (India / Uttar Pradesh Focus)
+
+The database seeder is preconfigured with Indian users, localized cities (Uttar Pradesh & NCR), and mock transactions:
+
+### Localities & Zones
+- **Uttar Pradesh (UP) Zone**: Kanpur (Sub-localities: *Barra*, *Kidwai Nagar*), Lucknow.
+- **National Capital Region (NCR) Zone**: Noida, Delhi, Gurugram.
+
+### Seeded Credentials
+
+| Role | Name | Email | Password |
+|---|---|---|---|
+| **Admin** | Rajesh Kumar | `admin@dispatchly.test` | `Admin@123` |
+| **Customer** | Aarav Sharma | `aarav@dispatchly.test` | `Customer@123` |
+| **Customer** | Priya Patel | `priya@dispatchly.test` | `Customer@123` |
+| **Courier Agent 1 (Online)** | Amit Singh | `amit@dispatchly.test` | `Agent@123` |
+| **Courier Agent 2 (Online)** | Vikram Malhotra | `vikram@dispatchly.test` | `Agent@123` |
+| **Courier Agent 3 (Offline)** | Neha Gupta | `neha@dispatchly.test` | `Agent@123` |
+
+---
+
 ## Core Algorithms & Logic
 
 ### 1. Volumetric Rate Calculation

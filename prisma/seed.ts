@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding database for Dispatchly...');
+  console.log('Seeding database for Dispatchly (India / Uttar Pradesh Focus)...');
 
   // 1. Clean existing records to prevent unique constraints issues on re-run
   await prisma.trackingEvent.deleteMany({});
@@ -20,10 +20,10 @@ async function main() {
   const agentPassHash = await bcrypt.hash('Agent@123', 10);
   const customerPassHash = await bcrypt.hash('Customer@123', 10);
 
-  // 3. Create Users
+  // 3. Create Users with Indian Names
   const admin = await prisma.user.create({
     data: {
-      name: 'System Admin',
+      name: 'Rajesh Kumar',
       email: 'admin@dispatchly.test',
       passwordHash: adminPassHash,
       role: 'ADMIN',
@@ -32,8 +32,8 @@ async function main() {
 
   const customer1 = await prisma.user.create({
     data: {
-      name: 'Alex Johnson',
-      email: 'customer1@dispatchly.test',
+      name: 'Aarav Sharma',
+      email: 'aarav@dispatchly.test',
       passwordHash: customerPassHash,
       role: 'CUSTOMER',
     },
@@ -41,8 +41,8 @@ async function main() {
 
   const customer2 = await prisma.user.create({
     data: {
-      name: 'Sophia Smith',
-      email: 'customer2@dispatchly.test',
+      name: 'Priya Patel',
+      email: 'priya@dispatchly.test',
       passwordHash: customerPassHash,
       role: 'CUSTOMER',
     },
@@ -50,8 +50,8 @@ async function main() {
 
   const agentUser1 = await prisma.user.create({
     data: {
-      name: 'Courier Bob',
-      email: 'agent1@dispatchly.test',
+      name: 'Amit Singh',
+      email: 'amit@dispatchly.test',
       passwordHash: agentPassHash,
       role: 'AGENT',
     },
@@ -59,8 +59,8 @@ async function main() {
 
   const agentUser2 = await prisma.user.create({
     data: {
-      name: 'Courier Sarah',
-      email: 'agent2@dispatchly.test',
+      name: 'Vikram Malhotra',
+      email: 'vikram@dispatchly.test',
       passwordHash: agentPassHash,
       role: 'AGENT',
     },
@@ -68,19 +68,19 @@ async function main() {
 
   const agentUser3 = await prisma.user.create({
     data: {
-      name: 'Courier David',
-      email: 'agent3@dispatchly.test',
+      name: 'Neha Gupta',
+      email: 'neha@dispatchly.test',
       passwordHash: agentPassHash,
       role: 'AGENT',
     },
   });
 
-  // 4. Create DeliveryAgent profiles
+  // 4. Create DeliveryAgent profiles with coordinates
   const agent1 = await prisma.deliveryAgent.create({
     data: {
       userId: agentUser1.id,
-      currentLatitude: 40.7589, // NYC Times Square (Zone A Area 1)
-      currentLongitude: -73.9851,
+      currentLatitude: 26.4499, // Kanpur (Barra region coordinates)
+      currentLongitude: 80.3319,
       available: true,
     },
   });
@@ -88,8 +88,8 @@ async function main() {
   const agent2 = await prisma.deliveryAgent.create({
     data: {
       userId: agentUser2.id,
-      currentLatitude: 40.6263, // Bay Ridge Brooklyn (Zone B Area 1)
-      currentLongitude: -74.0271,
+      currentLatitude: 26.8467, // Lucknow
+      currentLongitude: 80.9462,
       available: true,
     },
   });
@@ -97,88 +97,101 @@ async function main() {
   const agent3 = await prisma.deliveryAgent.create({
     data: {
       userId: agentUser3.id,
-      currentLatitude: 40.7128, // City Center NYC
-      currentLongitude: -74.0060,
+      currentLatitude: 28.5355, // Noida
+      currentLongitude: 77.3910,
       available: false, // Offline agent
     },
   });
 
-  // 5. Create Zones & Areas
-  const zoneA = await prisma.zone.create({
-    data: { name: 'Zone A (Manhattan)' },
+  // 5. Create Indian Zones (UP and NCR)
+  const zoneUP = await prisma.zone.create({
+    data: { name: 'Uttar Pradesh (UP)' },
   });
 
-  const zoneB = await prisma.zone.create({
-    data: { name: 'Zone B (Brooklyn)' },
+  const zoneNCR = await prisma.zone.create({
+    data: { name: 'National Capital Region (NCR)' },
   });
 
-  const areaA1 = await prisma.area.create({
-    data: { name: 'Manhattan', zoneId: zoneA.id },
+  // 6. Areas under UP and NCR
+  const areaUP1 = await prisma.area.create({
+    data: { name: 'Kanpur', zoneId: zoneUP.id },
   });
 
-  const areaA2 = await prisma.area.create({
-    data: { name: 'Zone A Area 1', zoneId: zoneA.id },
+  const areaUP2 = await prisma.area.create({
+    data: { name: 'Barra', zoneId: zoneUP.id },
   });
 
-  const areaB1 = await prisma.area.create({
-    data: { name: 'Brooklyn', zoneId: zoneB.id },
+  const areaUP3 = await prisma.area.create({
+    data: { name: 'Kidwai Nagar', zoneId: zoneUP.id },
   });
 
-  const areaB2 = await prisma.area.create({
-    data: { name: 'Zone B Area 1', zoneId: zoneB.id },
+  const areaUP4 = await prisma.area.create({
+    data: { name: 'Lucknow', zoneId: zoneUP.id },
   });
 
-  // 6. Create Rate Cards (B2B/B2C × INTRA_ZONE/INTER_ZONE)
+  const areaNCR1 = await prisma.area.create({
+    data: { name: 'Noida', zoneId: zoneNCR.id },
+  });
+
+  const areaNCR2 = await prisma.area.create({
+    data: { name: 'Delhi', zoneId: zoneNCR.id },
+  });
+
+  const areaNCR3 = await prisma.area.create({
+    data: { name: 'Gurugram', zoneId: zoneNCR.id },
+  });
+
+  // 7. Create Rate Cards (B2B/B2C × INTRA_ZONE/INTER_ZONE) in Rupees / INR
   await prisma.rateCard.createMany({
     data: [
       {
         orderType: 'B2C',
         zoneType: 'INTRA_ZONE',
-        pricePerKg: 10.0,
-        codCharge: 5.0,
+        pricePerKg: 40.0, // Rs. 40 per kg
+        codCharge: 20.0, // Rs. 20 COD charge
         isActive: true,
       },
       {
         orderType: 'B2C',
         zoneType: 'INTER_ZONE',
-        pricePerKg: 20.0,
-        codCharge: 8.0,
+        pricePerKg: 80.0, // Rs. 80 per kg
+        codCharge: 30.0,
         isActive: true,
       },
       {
         orderType: 'B2B',
         zoneType: 'INTRA_ZONE',
-        pricePerKg: 8.0,
-        codCharge: 4.0,
+        pricePerKg: 30.0,
+        codCharge: 15.0,
         isActive: true,
       },
       {
         orderType: 'B2B',
         zoneType: 'INTER_ZONE',
-        pricePerKg: 15.0,
-        codCharge: 6.0,
+        pricePerKg: 60.0,
+        codCharge: 25.0,
         isActive: true,
       },
     ],
   });
 
-  // 7. Seed Sample Orders with Mixed Statuses (CREATED, IN_TRANSIT, DELIVERED, FAILED)
+  // 8. Seed Sample Indian Orders with Mixed Statuses (CREATED, IN_TRANSIT, DELIVERED, FAILED)
   
-  // Order 1: CREATED, customer 1, pickup Manhattan, drop Brooklyn (INTER_ZONE B2C PREPAID), unassigned
+  // Order 1: CREATED, Aarav Sharma, pickup Barra (Kanpur), drop Kidwai Nagar (Kanpur) - INTRA_ZONE B2C PREPAID
   const order1 = await prisma.order.create({
     data: {
       customerId: customer1.id,
       createdByUserId: customer1.id,
-      pickupAddress: '123 Broadway, Manhattan, NY',
-      dropAddress: '456 Atlantic Ave, Brooklyn, NY',
-      pickupZoneId: zoneA.id,
-      dropZoneId: zoneB.id,
+      pickupAddress: 'House 42, Sector 3, Barra, Kanpur, UP',
+      dropAddress: 'Plot 105, Block C, Kidwai Nagar, Kanpur, UP',
+      pickupZoneId: zoneUP.id,
+      dropZoneId: zoneUP.id,
       actualWeight: 2.5,
       volumetricWeight: 1.2,
       billableWeight: 2.5,
       orderType: 'B2C',
       paymentType: 'PREPAID',
-      finalAmount: 50.0, // 2.5kg * $20/kg (INTER_ZONE B2C)
+      finalAmount: 100.0, // 2.5kg * Rs. 40/kg
       status: 'CREATED',
       assignedAgentId: null,
     },
@@ -193,21 +206,21 @@ async function main() {
     },
   });
 
-  // Order 2: IN_TRANSIT, customer 1, pickup Zone A Area 1, drop Zone A Area 1 (INTRA_ZONE B2B COD), assigned to Agent 1
+  // Order 2: IN_TRANSIT, Aarav Sharma, pickup Lucknow, drop Noida - INTER_ZONE B2B COD, assigned to Amit
   const order2 = await prisma.order.create({
     data: {
       customerId: customer1.id,
       createdByUserId: customer1.id,
-      pickupAddress: '789 Times Square, Manhattan, NY',
-      dropAddress: '101 Central Park West, Manhattan, NY',
-      pickupZoneId: zoneA.id,
-      dropZoneId: zoneA.id,
+      pickupAddress: 'Hazratganj Crossing, Lucknow, UP',
+      dropAddress: 'Sector 62, Metro Depot, Noida, UP',
+      pickupZoneId: zoneUP.id,
+      dropZoneId: zoneNCR.id,
       actualWeight: 5.0,
       volumetricWeight: 8.0,
       billableWeight: 8.0, // uses volumetric
       orderType: 'B2B',
       paymentType: 'COD',
-      finalAmount: 68.0, // 8.0kg * $8/kg (INTRA_ZONE B2B) + $4 flat COD charge
+      finalAmount: 505.0, // 8kg * Rs. 60/kg (INTER_ZONE B2B) + Rs. 25 COD
       status: 'IN_TRANSIT',
       assignedAgentId: agent1.id,
     },
@@ -220,14 +233,14 @@ async function main() {
         oldStatus: null,
         newStatus: 'CREATED',
         changedByUserId: customer1.id,
-        timestamp: new Date(Date.now() - 3600000 * 2), // 2 hours ago
+        timestamp: new Date(Date.now() - 3600000 * 2),
       },
       {
         orderId: order2.id,
         oldStatus: 'CREATED',
         newStatus: 'PICKED_UP',
         changedByUserId: agentUser1.id,
-        timestamp: new Date(Date.now() - 3600000), // 1 hour ago
+        timestamp: new Date(Date.now() - 3600000),
       },
       {
         orderId: order2.id,
@@ -239,21 +252,21 @@ async function main() {
     ],
   });
 
-  // Order 3: DELIVERED, customer 2, pickup Brooklyn, drop Brooklyn (INTRA_ZONE B2C PREPAID), assigned to Agent 2
+  // Order 3: DELIVERED, Priya Patel, pickup Delhi, drop Gurugram - INTRA_ZONE B2C PREPAID, assigned to Vikram
   const order3 = await prisma.order.create({
     data: {
       customerId: customer2.id,
       createdByUserId: customer2.id,
-      pickupAddress: '11 Flatbush Ave, Brooklyn, NY',
-      dropAddress: '22 Bedford Ave, Brooklyn, NY',
-      pickupZoneId: zoneB.id,
-      dropZoneId: zoneB.id,
+      pickupAddress: 'Connaught Place, New Delhi, NCR',
+      dropAddress: 'Cyber City, Phase 3, Gurugram, NCR',
+      pickupZoneId: zoneNCR.id,
+      dropZoneId: zoneNCR.id,
       actualWeight: 1.5,
       volumetricWeight: 1.0,
       billableWeight: 1.5,
       orderType: 'B2C',
       paymentType: 'PREPAID',
-      finalAmount: 15.0, // 1.5kg * $10/kg (INTRA_ZONE B2C)
+      finalAmount: 60.0, // 1.5kg * Rs. 40/kg
       status: 'DELIVERED',
       assignedAgentId: agent2.id,
     },
@@ -299,21 +312,21 @@ async function main() {
     ],
   });
 
-  // Order 4: FAILED, customer 2, pickup Zone A Area 1, drop Zone B Area 1 (INTER_ZONE B2C PREPAID), assigned to Agent 1
+  // Order 4: FAILED, Priya Patel, pickup Barra, drop Noida - INTER_ZONE B2C PREPAID, assigned to Amit
   const order4 = await prisma.order.create({
     data: {
       customerId: customer2.id,
       createdByUserId: customer2.id,
-      pickupAddress: '555 Broadway, Manhattan, NY',
-      dropAddress: '777 Ocean Parkway, Brooklyn, NY',
-      pickupZoneId: zoneA.id,
-      dropZoneId: zoneB.id,
+      pickupAddress: 'Barra Bypass, Kanpur, UP',
+      dropAddress: 'Sector 15 Metro Lane, Noida, UP',
+      pickupZoneId: zoneUP.id,
+      dropZoneId: zoneNCR.id,
       actualWeight: 3.0,
       volumetricWeight: 2.0,
       billableWeight: 3.0,
       orderType: 'B2C',
       paymentType: 'PREPAID',
-      finalAmount: 60.0, // 3kg * $20/kg (INTER_ZONE B2C)
+      finalAmount: 240.0, // 3kg * Rs. 80/kg
       status: 'FAILED',
       assignedAgentId: agent1.id,
     },
@@ -347,7 +360,7 @@ async function main() {
         oldStatus: 'IN_TRANSIT',
         newStatus: 'OUT_FOR_DELIVERY',
         changedByUserId: agentUser1.id,
-        timestamp: new Date(Date.now() - 1800000), // 30 mins ago
+        timestamp: new Date(Date.now() - 1800000),
       },
       {
         orderId: order4.id,
@@ -359,8 +372,10 @@ async function main() {
     ],
   });
 
-  console.log('Seeding completed successfully!');
-  console.log('Dispatchly test accounts are ready.');
+  console.log('Seeding completed successfully with Indian credentials!');
+  console.log('Admin: admin@dispatchly.test / Admin@123');
+  console.log('Customer: aarav@dispatchly.test / Customer@123');
+  console.log('Agent: amit@dispatchly.test / Agent@123');
 }
 
 main()
