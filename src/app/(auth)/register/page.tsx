@@ -55,7 +55,7 @@ export default function RegisterPage() {
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
             Create Account
           </h1>
-          <p className="text-slate-400 text-sm">Join Daffodil Delivery to track and manage shipments</p>
+          <p className="text-slate-400 text-sm">Join Dispatchly Delivery to track and manage shipments</p>
         </div>
 
         {error && (

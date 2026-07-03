@@ -103,10 +103,10 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
         <div className="p-6">
           <div className="flex items-center gap-3 mb-8">
             <span className="h-8 w-8 rounded-lg bg-violet-600 flex items-center justify-center font-bold text-white tracking-wider">
-              DF
+              DP
             </span>
             <span className="font-bold text-lg bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
-              Daffodil Agent
+              Dispatchly Agent
             </span>
           </div>
 

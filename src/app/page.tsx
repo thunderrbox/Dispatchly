@@ -8,10 +8,10 @@ export default function LandingPage() {
       <header className="border-b border-slate-900 bg-slate-950/60 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <span className="h-8 w-8 rounded-lg bg-violet-600 flex items-center justify-center font-bold text-white tracking-wider">
-            DF
+            DP
           </span>
           <span className="font-extrabold text-lg bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
-            Daffodil
+            Dispatchly
           </span>
         </div>
         <div className="flex gap-4">
@@ -135,7 +135,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 py-8 px-6 text-center text-xs text-slate-600">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p>© 2026 Daffodil Courier. Solo placement-evaluated CS project.</p>
+          <p>© 2026 Dispatchly Courier. Solo placement-evaluated CS project.</p>
           <a
             href="https://github.com"
             target="_blank"
