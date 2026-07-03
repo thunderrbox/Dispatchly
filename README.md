@@ -61,8 +61,6 @@ Dispatchly implements a **Layered Service-Oriented Architecture**:
 |:---:|:---:|
 | ![Admin Dashboard](./docs/screenshots/admin_dashboard.png) | ![Courier Portal](./docs/screenshots/courier_portal.png) |
 
-*(Note: Place your screenshots inside `/docs/screenshots/` in your repository).*
-
 ---
 
 ## 5. Installation & Setup
