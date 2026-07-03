@@ -53,26 +53,26 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
   return (
     <div className="min-h-screen flex bg-[#FAF7F2] text-[#1C1C1A] font-sans selection:bg-[#E8622C]/20">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#F4EFE6] border-r border-[#1C1C1A]/10 flex flex-col justify-between">
+      <aside className="w-64 bg-sidebar border-r border-foreground/10 flex flex-col justify-between">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-8">
-            <div className="text-[#E8622C]">
+            <div className="text-accent">
               <DispatchlyLogo className="h-8 w-8" />
             </div>
-            <span className="font-display font-extrabold text-lg text-[#1C1C1A]">
+            <span className="font-display font-extrabold text-lg text-foreground">
               Dispatchly Hub
             </span>
           </div>
           <nav className="space-y-1">
             <Link
               href="/customer/orders"
-              className="flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-lg text-[#1C1C1A]/80 hover:bg-[#1C1C1A]/5 hover:text-[#1C1C1A] transition-all"
+              className="flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-lg text-foreground/80 hover:bg-foreground/5 hover:text-foreground transition-all"
             >
               My Orders
             </Link>
             <Link
               href="/customer/orders/create"
-              className="flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-lg text-[#1C1C1A]/80 hover:bg-[#1C1C1A]/5 hover:text-[#1C1C1A] transition-all"
+              className="flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-lg text-foreground/80 hover:bg-foreground/5 hover:text-foreground transition-all"
             >
               Ship New Parcel
             </Link>
@@ -80,16 +80,16 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
         </div>
 
         {/* User Info & Logout */}
-        <div className="p-4 border-t border-[#1C1C1A]/10 flex flex-col gap-2">
+        <div className="p-4 border-t border-foreground/10 flex flex-col gap-2">
           <div className="px-3 py-2">
-            <p className="text-[10px] text-[#1C1C1A]/40 font-bold uppercase tracking-wider">Customer Portal</p>
-            <p className="text-sm font-bold truncate text-[#1C1C1A]">{userName}</p>
+            <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-wider">Customer Portal</p>
+            <p className="text-sm font-bold truncate text-foreground">{userName}</p>
           </div>
           <motion.button
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleLogout}
-            className="w-full text-left px-3 py-2 text-xs font-bold text-[#E8622C] hover:bg-[#E8622C]/10 rounded-lg transition-colors"
+            className="w-full text-left px-3 py-2 text-xs font-bold text-accent hover:bg-accent/10 rounded-lg transition-colors"
           >
             Sign Out
           </motion.button>
