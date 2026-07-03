@@ -140,7 +140,7 @@ export default function CustomerOrdersPage() {
                       </span>
                     </td>
                     <td className="py-3.5 px-4 text-right font-medium">{order.billableWeight.toFixed(2)} kg</td>
-                    <td className="py-3.5 px-4 text-right font-bold text-violet-400">${order.finalAmount.toFixed(2)}</td>
+                    <td className="py-3.5 px-4 text-right font-bold text-violet-400">₹{order.finalAmount.toFixed(2)}</td>
                     <td className="py-3.5 px-4 text-center text-xs text-slate-550">
                       {new Date(order.createdAt).toLocaleDateString(undefined, {
                         month: 'short',

@@ -233,7 +233,7 @@ export default function AdminRatesPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
-                  Price Per Kg ($)
+                  Price Per Kg (₹)
                 </label>
                 <input
                   type="number"
@@ -247,7 +247,7 @@ export default function AdminRatesPage() {
               </div>
               <div>
                 <label className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
-                  COD Charge ($)
+                  COD Charge (₹)
                 </label>
                 <input
                   type="number"
@@ -419,15 +419,15 @@ export default function AdminRatesPage() {
                 <span className="text-right text-violet-300 font-semibold">{calcResult.zoneType}</span>
 
                 <span className="text-slate-450">Base Price:</span>
-                <span className="text-right text-slate-200 font-semibold">${calcResult.baseAmount.toFixed(2)}</span>
+                <span className="text-right text-slate-200 font-semibold">₹{calcResult.baseAmount.toFixed(2)}</span>
 
                 <span className="text-slate-450">COD Surcharge:</span>
-                <span className="text-right text-slate-200 font-semibold">${calcResult.codSurcharge.toFixed(2)}</span>
+                <span className="text-right text-slate-200 font-semibold">₹{calcResult.codSurcharge.toFixed(2)}</span>
 
                 <div className="col-span-2 border-t border-slate-850 my-1"></div>
 
                 <span className="text-sm font-bold text-slate-200">Total Price:</span>
-                <span className="text-right text-sm font-bold text-violet-400">${calcResult.finalAmount.toFixed(2)}</span>
+                <span className="text-right text-sm font-bold text-violet-400">₹{calcResult.finalAmount.toFixed(2)}</span>
               </div>
             </div>
           )}
@@ -460,8 +460,8 @@ export default function AdminRatesPage() {
                   <tr key={card.id} className="hover:bg-slate-850/20 text-slate-300">
                     <td className="py-3.5 px-4 font-bold">{card.orderType}</td>
                     <td className="py-3.5 px-4">{card.zoneType === 'INTRA_ZONE' ? 'Intra-Zone' : 'Inter-Zone'}</td>
-                    <td className="py-3.5 px-4 text-right font-semibold text-violet-400">${card.pricePerKg.toFixed(2)}</td>
-                    <td className="py-3.5 px-4 text-right">${card.codCharge.toFixed(2)}</td>
+                    <td className="py-3.5 px-4 text-right font-semibold text-violet-400">₹{card.pricePerKg.toFixed(2)}</td>
+                    <td className="py-3.5 px-4 text-right">₹{card.codCharge.toFixed(2)}</td>
                     <td className="py-3.5 px-4 text-center">
                       <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-450 border border-emerald-500/25">
                         Active

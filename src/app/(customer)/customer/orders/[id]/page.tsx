@@ -184,7 +184,7 @@ export default function CustomerOrderDetailPage({ params }: { params: Promise<{ 
                 </div>
                 <div>
                   <span className="text-slate-500 text-xs uppercase font-semibold">Payment Details</span>
-                  <p className="text-slate-200 font-semibold">{order.paymentType} • ${order.finalAmount.toFixed(2)}</p>
+                  <p className="text-slate-200 font-semibold">{order.paymentType} • ₹{order.finalAmount.toFixed(2)}</p>
                 </div>
               </div>
             </div>

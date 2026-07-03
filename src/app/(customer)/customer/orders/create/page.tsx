@@ -406,15 +406,15 @@ export default function CreateOrderPage() {
                     <span className="text-right text-violet-400 font-semibold">{preview.zoneType}</span>
 
                     <span className="text-slate-400">Base Cost</span>
-                    <span className="text-right text-slate-250">${preview.baseAmount.toFixed(2)}</span>
+                    <span className="text-right text-slate-250">₹{preview.baseAmount.toFixed(2)}</span>
 
                     <span className="text-slate-400">COD Surcharge</span>
-                    <span className="text-right text-slate-250">${preview.codSurcharge.toFixed(2)}</span>
+                    <span className="text-right text-slate-250">₹{preview.codSurcharge.toFixed(2)}</span>
 
                     <div className="col-span-2 border-t border-slate-800 my-1"></div>
 
                     <span className="text-base font-bold text-slate-200">Total Surcharge</span>
-                    <span className="text-right text-base font-bold text-violet-400">${preview.finalAmount.toFixed(2)}</span>
+                    <span className="text-right text-base font-bold text-violet-400">₹{preview.finalAmount.toFixed(2)}</span>
                   </div>
                 </div>
               ) : (
