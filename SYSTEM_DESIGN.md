@@ -1,6 +1,6 @@
 # System Design & Core Architectural Decisions
 
-This document outlines the technical implementation details and tradeoffs for the key components of the Daffodil Last-Mile Delivery Tracker.
+This document outlines the technical implementation details and tradeoffs for the key components of the Dispatchly Last-Mile Delivery Tracker.
 
 ---
 
