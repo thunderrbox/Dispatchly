@@ -1,146 +1,317 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+
+// Custom, original geometric SVG icon representing delivery pipelines
+const GeometricLogisticsIcon = () => (
+  <svg
+    viewBox="0 0 200 200"
+    className="w-full h-full max-w-[280px] md:max-w-[340px] mx-auto text-[#E8622C]"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {/* Grid of dots */}
+    <g opacity="0.15" stroke="currentColor" strokeWidth="2">
+      <circle cx="20" cy="20" r="1.5" fill="currentColor" />
+      <circle cx="60" cy="20" r="1.5" fill="currentColor" />
+      <circle cx="100" cy="20" r="1.5" fill="currentColor" />
+      <circle cx="140" cy="20" r="1.5" fill="currentColor" />
+      <circle cx="180" cy="20" r="1.5" fill="currentColor" />
+      <circle cx="20" cy="60" r="1.5" fill="currentColor" />
+      <circle cx="60" cy="60" r="1.5" fill="currentColor" />
+      <circle cx="100" cy="60" r="1.5" fill="currentColor" />
+      <circle cx="140" cy="60" r="1.5" fill="currentColor" />
+      <circle cx="180" cy="60" r="1.5" fill="currentColor" />
+      <circle cx="20" cy="100" r="1.5" fill="currentColor" />
+      <circle cx="60" cy="100" r="1.5" fill="currentColor" />
+      <circle cx="100" cy="100" r="1.5" fill="currentColor" />
+      <circle cx="140" cy="100" r="1.5" fill="currentColor" />
+      <circle cx="180" cy="100" r="1.5" fill="currentColor" />
+      <circle cx="20" cy="140" r="1.5" fill="currentColor" />
+      <circle cx="60" cy="140" r="1.5" fill="currentColor" />
+      <circle cx="100" cy="140" r="1.5" fill="currentColor" />
+      <circle cx="140" cy="140" r="1.5" fill="currentColor" />
+      <circle cx="180" cy="140" r="1.5" fill="currentColor" />
+      <circle cx="20" cy="180" r="1.5" fill="currentColor" />
+      <circle cx="60" cy="180" r="1.5" fill="currentColor" />
+      <circle cx="100" cy="180" r="1.5" fill="currentColor" />
+      <circle cx="140" cy="180" r="1.5" fill="currentColor" />
+      <circle cx="180" cy="180" r="1.5" fill="currentColor" />
+    </g>
+
+    {/* Connected nodes path */}
+    <motion.path
+      d="M20,100 L60,60 L140,140 L180,100"
+      stroke="#1C1C1A"
+      strokeWidth="4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      initial={{ pathLength: 0 }}
+      animate={{ pathLength: 1 }}
+      transition={{ duration: 1.8, ease: "easeInOut" }}
+    />
+
+    {/* Pulsing nodes */}
+    <motion.circle
+      cx="20"
+      cy="100"
+      r="6"
+      fill="#E8622C"
+      stroke="#FAF7F2"
+      strokeWidth="2"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ delay: 0.2 }}
+    />
+    <motion.circle
+      cx="60"
+      cy="60"
+      r="6"
+      fill="#E8622C"
+      stroke="#FAF7F2"
+      strokeWidth="2"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ delay: 0.6 }}
+    />
+    <motion.circle
+      cx="140"
+      cy="140"
+      r="6"
+      fill="#E8622C"
+      stroke="#FAF7F2"
+      strokeWidth="2"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ delay: 1.0 }}
+    />
+    <motion.circle
+      cx="180"
+      cy="100"
+      r="6"
+      fill="#E8622C"
+      stroke="#FAF7F2"
+      strokeWidth="2"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ delay: 1.4 }}
+    />
+
+    {/* Geometric accent frames */}
+    <rect x="10" y="10" width="180" height="180" rx="16" stroke="#1C1C1A" strokeWidth="2" opacity="0.1" />
+    <path d="M10,30 L190,30" stroke="#1C1C1A" strokeWidth="2" opacity="0.1" />
+  </svg>
+);
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white font-sans flex flex-col justify-between">
-      {/* Navbar */}
-      <header className="border-b border-slate-900 bg-slate-950/60 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-[#FAF7F2] text-[#1C1C1A] font-sans flex flex-col justify-between selection:bg-[#E8622C]/20">
+      {/* Header */}
+      <header className="border-b border-[#1C1C1A]/10 bg-[#FAF7F2]/80 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center max-w-7xl mx-auto w-full">
         <div className="flex items-center gap-3">
-          <span className="h-8 w-8 rounded-lg bg-violet-600 flex items-center justify-center font-bold text-white tracking-wider">
+          <span className="h-8 w-8 rounded-lg bg-[#E8622C] flex items-center justify-center font-bold text-[#FAF7F2] tracking-wider text-sm">
             DP
           </span>
-          <span className="font-extrabold text-lg bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <span className="font-display font-extrabold text-lg tracking-tight">
             Dispatchly
           </span>
         </div>
         <div className="flex gap-4">
           <Link
             href="/login"
-            className="text-xs font-semibold text-slate-350 hover:text-white px-3 py-2 transition-colors"
+            className="text-xs font-semibold text-[#1C1C1A]/70 hover:text-[#1C1C1A] px-3 py-2 transition-colors"
           >
             Sign In
           </Link>
-          <Link
-            href="/register"
-            className="text-xs font-semibold bg-violet-600 hover:bg-violet-500 text-white px-4 py-2 rounded-xl shadow-lg shadow-violet-600/10 active:scale-[0.98] transition-all"
-          >
-            Get Started
-          </Link>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Link
+              href="/register"
+              className="text-xs font-semibold bg-[#E8622C] text-[#FAF7F2] px-4 py-2 rounded-lg shadow-sm hover:bg-[#E8622C]/90 active:scale-[0.98] transition-colors"
+            >
+              Get Started
+            </Link>
+          </motion.div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative px-6 py-20 md:py-32 max-w-5xl mx-auto text-center space-y-8 flex-1 flex flex-col justify-center">
-        {/* Subtle blur background decorations */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-violet-600/15 rounded-full blur-3xl -z-10"></div>
-        <div className="absolute top-1/3 left-1/3 w-60 h-60 bg-indigo-600/10 rounded-full blur-3xl -z-10"></div>
-
-        <div className="space-y-4">
-          <span className="px-3.5 py-1 text-[10px] font-bold tracking-wider uppercase bg-violet-500/10 border border-violet-500/20 text-violet-400 rounded-full inline-block">
-            Placement Evaluated Platform
+      {/* Asymmetric Hero Section */}
+      <main className="max-w-7xl mx-auto px-6 py-16 md:py-24 w-full flex-1 grid md:grid-cols-12 gap-12 items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="md:col-span-7 space-y-6 text-left"
+        >
+          <span className="px-3.5 py-1 text-[10px] font-bold tracking-wider uppercase bg-[#E8622C]/10 border border-[#E8622C]/20 text-[#E8622C] rounded-full inline-block">
+            Smart Delivery Orchestration
           </span>
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-none bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
-            Precision Hyper-Local <br className="hidden sm:inline" />
-            Last-Mile Delivery Log
+          <h1 className="text-4xl sm:text-6xl font-display font-extrabold tracking-tight leading-none text-[#1C1C1A]">
+            Precision Logistics, <br />
+            from Rate to Doorstep.
           </h1>
-          <p className="max-w-2xl mx-auto text-sm sm:text-base text-slate-400 leading-relaxed">
-            A secure layered architecture featuring exact volumetric pricing formulas, GPS-nearest auto courier matching, immutable audit history trails, and role-scoped portals.
+          <p className="max-w-xl text-sm sm:text-base text-[#1C1C1A]/70 leading-relaxed font-sans">
+            Automate parcel pricing via exact volumetric calculation cards, route courier matching using GPS-nearest Haversine sorting, and log every delivery status update inside an immutable event ledger.
           </p>
-        </div>
 
-        <div className="flex justify-center gap-4 flex-wrap">
-          <Link
-            href="/register"
-            className="py-3 px-6 bg-violet-600 hover:bg-violet-500 text-white rounded-xl text-sm font-semibold tracking-wide shadow-lg shadow-violet-600/25 active:scale-[0.98] transition-all"
-          >
-            Launch Shipping Hub
-          </Link>
-          <Link
-            href="/login"
-            className="py-3 px-6 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-350 hover:text-white rounded-xl text-sm font-semibold tracking-wide transition-all"
-          >
-            Access Portal
-          </Link>
+          <div className="flex gap-4 flex-wrap pt-2">
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                href="/register"
+                className="py-3 px-6 bg-[#E8622C] hover:bg-[#E8622C]/90 text-[#FAF7F2] rounded-lg text-sm font-semibold tracking-wide shadow-sm transition-colors block text-center"
+              >
+                Launch Shipping Hub
+              </Link>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                href="/login"
+                className="py-3 px-6 bg-transparent hover:bg-[#1C1C1A]/5 border border-[#1C1C1A]/20 text-[#1C1C1A] rounded-lg text-sm font-semibold tracking-wide transition-colors block text-center"
+              >
+                Access Portal
+              </Link>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Asymmetric Graphic column */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="md:col-span-5 flex justify-center"
+        >
+          <div className="p-8 bg-white/40 border border-[#1C1C1A]/5 rounded-2xl shadow-sm backdrop-blur-md w-full max-w-sm flex items-center justify-center relative">
+            <GeometricLogisticsIcon />
+            {/* Absolute offset shapes for asymmetry */}
+            <div className="absolute -top-3 -right-3 h-6 w-6 rounded-lg bg-[#E8622C]/10 border border-[#E8622C]/20 -z-10"></div>
+            <div className="absolute -bottom-4 -left-4 h-12 w-12 rounded-xl bg-[#1C1C1A]/5 border border-[#1C1C1A]/10 -z-10"></div>
+          </div>
+        </motion.div>
+      </main>
+
+      {/* Bento Grid Features Section */}
+      <section className="bg-white/30 border-t border-[#1C1C1A]/10 py-20 px-6">
+        <div className="max-w-7xl mx-auto space-y-16">
+          <div className="text-left max-w-xl space-y-2">
+            <h2 className="text-3xl font-display font-extrabold tracking-tight text-[#1C1C1A]">
+              Graded Service Modules
+            </h2>
+            <p className="text-xs text-[#1C1C1A]/50 uppercase tracking-widest font-bold">
+              Automated logistics workflows engineered for audit-level precision.
+            </p>
+          </div>
+
+          {/* Bento Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            
+            {/* Box 1 (Size 6) */}
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="md:col-span-6 bg-white/80 border border-[#1C1C1A]/5 p-8 rounded-2xl shadow-sm flex flex-col justify-between space-y-8"
+            >
+              <div className="space-y-4">
+                <div className="h-10 w-10 rounded-lg bg-[#E8622C]/10 flex items-center justify-center text-[#E8622C] font-display font-bold">
+                  01
+                </div>
+                <h3 className="font-display font-bold text-lg text-[#1C1C1A]">Volumetric Pricing Engine</h3>
+                <p className="text-sm text-[#1C1C1A]/70 leading-relaxed font-sans">
+                  Calculates billing amounts utilizing weight vs dimensions ($L \times W \times H / 5000$). Automatically applies flat COD fees or inter-zone shipping cards with zero silent fallbacks.
+                </p>
+              </div>
+              <div className="pt-2 text-xs font-semibold text-[#E8622C] tracking-wide uppercase">
+                Correct Rate Rules
+              </div>
+            </motion.div>
+
+            {/* Box 2 (Size 6) */}
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="md:col-span-6 bg-white/80 border border-[#1C1C1A]/5 p-8 rounded-2xl shadow-sm flex flex-col justify-between space-y-8"
+            >
+              <div className="space-y-4">
+                <div className="h-10 w-10 rounded-lg bg-[#E8622C]/10 flex items-center justify-center text-[#E8622C] font-display font-bold">
+                  02
+                </div>
+                <h3 className="font-display font-bold text-lg text-[#1C1C1A]">Haversine Dispatch Matching</h3>
+                <p className="text-sm text-[#1C1C1A]/70 leading-relaxed font-sans">
+                  Calculates geodesic spherical distances to match available agents to shipment origins, incorporating order-load tie-breaks to protect agents from dispatch overload.
+                </p>
+              </div>
+              <div className="pt-2 text-xs font-semibold text-[#E8622C] tracking-wide uppercase">
+                Geodesic Sorting
+              </div>
+            </motion.div>
+
+            {/* Box 3 (Size 8) */}
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="md:col-span-8 bg-white/80 border border-[#1C1C1A]/5 p-8 rounded-2xl shadow-sm flex flex-col justify-between space-y-8"
+            >
+              <div className="space-y-4">
+                <div className="h-10 w-10 rounded-lg bg-[#E8622C]/10 flex items-center justify-center text-[#E8622C] font-display font-bold">
+                  03
+                </div>
+                <h3 className="font-display font-bold text-lg text-[#1C1C1A]">Immutable State Machine Tracking</h3>
+                <p className="text-sm text-[#1C1C1A]/70 leading-relaxed font-sans">
+                  Enforces strict sequence transitions inside the service layer. Logs every update in a read-only tracking event timeline, logging admin manual corrections with explicit audit overrides (`isOverride = true`).
+                </p>
+              </div>
+              <div className="pt-2 text-xs font-semibold text-[#E8622C] tracking-wide uppercase">
+                Chronological Logs
+              </div>
+            </motion.div>
+
+            {/* Box 4 (Size 4) */}
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="md:col-span-4 bg-white/80 border border-[#1C1C1A]/5 p-8 rounded-2xl shadow-sm flex flex-col justify-between space-y-8"
+            >
+              <div className="space-y-4">
+                <div className="h-10 w-10 rounded-lg bg-[#E8622C]/10 flex items-center justify-center text-[#E8622C] font-display font-bold">
+                  04
+                </div>
+                <h3 className="font-display font-bold text-lg text-[#1C1C1A]">Role Scopes</h3>
+                <p className="text-sm text-[#1C1C1A]/70 leading-relaxed font-sans">
+                  Ensures secure separation of privileges for Customers, Courier Agents, and Admins via JWT validation layers.
+                </p>
+              </div>
+              <div className="pt-2 text-xs font-semibold text-[#E8622C] tracking-wide uppercase">
+                RBAC Security
+              </div>
+            </motion.div>
+
+          </div>
         </div>
       </section>
 
-      {/* Feature cards Grid */}
-      <section className="border-t border-slate-900 bg-slate-950 py-16 px-6">
-        <div className="max-w-5xl mx-auto space-y-12">
-          <div className="text-center space-y-2">
-            <h2 className="text-2xl font-bold text-slate-100">Graded Implementation Features</h2>
-            <p className="text-xs text-slate-500 uppercase tracking-wider">Engineered to placement taker evaluation specifications</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-6 space-y-3">
-              <div className="h-9 w-9 rounded-lg bg-violet-500/10 border border-violet-500/25 flex items-center justify-center font-bold text-violet-400 text-sm">
-                01
-              </div>
-              <h3 className="font-bold text-slate-200 text-sm">Correct Rate Pricing Engine</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Calculates billing amounts utilizing weight vs dimensions (L×W×H/5000), B2B/B2C, flat Cash on Delivery surcharges, and inter/intra zone coverage detection.
-              </p>
-            </div>
-
-            <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-6 space-y-3">
-              <div className="h-9 w-9 rounded-lg bg-violet-500/10 border border-violet-500/25 flex items-center justify-center font-bold text-violet-400 text-sm">
-                02
-              </div>
-              <h3 className="font-bold text-slate-200 text-sm">Haversine Courier Matching</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Matches closest available online couriers using the spherical Haversine distance formula with active order load count tie-breaks.
-              </p>
-            </div>
-
-            <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-6 space-y-3">
-              <div className="h-9 w-9 rounded-lg bg-violet-500/10 border border-violet-500/25 flex items-center justify-center font-bold text-violet-400 text-sm">
-                03
-              </div>
-              <h3 className="font-bold text-slate-200 text-sm">State Machine Tracking Log</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Enforces strict state transition rules at the service layer, maintaining an insert-only, immutable tracking audit log with admin override flags.
-              </p>
-            </div>
-
-            <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-6 space-y-3">
-              <div className="h-9 w-9 rounded-lg bg-violet-500/10 border border-violet-500/25 flex items-center justify-center font-bold text-violet-400 text-sm">
-                04
-              </div>
-              <h3 className="font-bold text-slate-200 text-sm">Role-Scoped Authentication</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Validates authorization using stateless, secure JWT claims. Shields database reads and writes with fine-grained Customer, Courier, and Admin privileges.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Tech stack Strip */}
-      <section className="bg-slate-950/20 border-t border-slate-900 py-10 px-6">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Engineered With</span>
-          <div className="flex gap-6 flex-wrap justify-center text-xs text-slate-400 font-mono font-medium">
-            <span>Next.js 15 (App Router)</span>
+      {/* Tech Stack Strip */}
+      <section className="border-t border-[#1C1C1A]/10 py-12 bg-[#FAF7F2] px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <span className="text-xs text-[#1C1C1A]/40 font-bold uppercase tracking-wider">
+            Logistics Technology Stack
+          </span>
+          <div className="flex gap-x-8 gap-y-3 flex-wrap justify-center text-xs text-[#1C1C1A]/75 font-semibold font-sans">
+            <span>Next.js 15 App Router</span>
             <span>TypeScript</span>
             <span>Prisma ORM</span>
             <span>PostgreSQL</span>
             <span>Tailwind CSS</span>
-            <span>Vitest</span>
+            <span>Framer Motion</span>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-8 px-6 text-center text-xs text-slate-600">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p>© 2026 Dispatchly Courier. Solo placement-evaluated CS project.</p>
+      <footer className="border-t border-[#1C1C1A]/10 py-8 bg-[#FAF7F2] text-xs text-[#1C1C1A]/50 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p>© 2026 Dispatchly Courier. Evaluated CS placement application.</p>
           <a
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-slate-400 font-medium transition-colors"
+            className="hover:text-[#1C1C1A] font-semibold transition-colors"
           >
             View Code on GitHub
           </a>
