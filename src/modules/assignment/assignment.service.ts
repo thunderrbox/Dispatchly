@@ -1,8 +1,11 @@
 import prisma from '../../lib/prisma';
 
-// Helper: Haversine distance in km
+/**
+ * Calculates the geodesic distance between two points on the Earth's surface
+ * using the Haversine formula. This provides a straight-line approximation in kilometers.
+ */
 export function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371; // Earth's radius in km
+  const R = 6371; // Earth's radius in kilometers
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
@@ -15,18 +18,23 @@ export function haversineDistance(lat1: number, lon1: number, lat2: number, lon2
   return R * c;
 }
 
-// Static coordinate map representing area coordinates
+// Coordinate map representing representative coordinates for Indian localities focused on UP & NCR
 const AREA_COORDINATES: Record<string, { lat: number; lon: number }> = {
-  'Manhattan': { lat: 40.7831, lon: -73.9712 },
-  'Brooklyn': { lat: 40.6782, lon: -73.9442 },
-  'Queens': { lat: 40.7282, lon: -73.7949 },
-  'Zone A Area 1': { lat: 40.7589, lon: -73.9851 }, // Times Square
-  'Zone B Area 1': { lat: 40.6263, lon: -74.0271 }, // Bay Ridge
-  'Zone C Area 1': { lat: 40.7420, lon: -73.8480 }, // Flushing Meadows
+  'Kanpur': { lat: 26.4499, lon: 80.3319 },
+  'Barra': { lat: 26.4480, lon: 80.3200 },
+  'Kidwai Nagar': { lat: 26.4520, lon: 80.3500 },
+  'Lucknow': { lat: 26.8467, lon: 80.9462 },
+  'Noida': { lat: 28.5355, lon: 77.3910 },
+  'Delhi': { lat: 28.6139, lon: 77.2090 },
+  'Gurugram': { lat: 28.4595, lon: 77.0266 },
 };
 
+/**
+ * Returns representative latitude and longitude for a given locality area.
+ * Defaults to Kanpur if area is not registered.
+ */
 export function getAreaCoordinates(areaName: string): { lat: number; lon: number } {
-  return AREA_COORDINATES[areaName] || { lat: 40.7128, lon: -74.0060 }; // NYC default
+  return AREA_COORDINATES[areaName] || { lat: 26.4499, lon: 80.3319 }; // Kanpur default
 }
 
 export async function manualAssign(orderId: string, agentId: string, adminUserId: string) {
