@@ -1,6 +1,7 @@
 import prisma from '../../lib/prisma';
 import { CreateOrderSchema } from './order.validation';
 import { calculateRate } from '../rate/rate.service';
+import { sendOrderCreatedEmail } from '../notification/notification.service';
 import { z } from 'zod';
 
 type CreateOrderInput = z.infer<typeof CreateOrderSchema> & {
@@ -39,7 +40,7 @@ export async function createOrder(input: CreateOrderInput) {
   });
 
   // 3. Create order and initial tracking event in a transaction
-  return await prisma.$transaction(async (tx) => {
+  const createdOrder = await prisma.$transaction(async (tx) => {
     const order = await tx.order.create({
       data: {
         customerId: input.customerId,
@@ -72,6 +73,29 @@ export async function createOrder(input: CreateOrderInput) {
 
     return order;
   });
+
+  // 4. Trigger best-effort order creation & payment email notification
+  try {
+    const customer = await prisma.user.findUnique({
+      where: { id: input.customerId },
+      select: { email: true, name: true },
+    });
+    if (customer) {
+      sendOrderCreatedEmail(
+        createdOrder.id,
+        customer.email,
+        customer.name,
+        createdOrder.finalAmount,
+        createdOrder.paymentType,
+        createdOrder.pickupAddress,
+        createdOrder.dropAddress
+      );
+    }
+  } catch (err) {
+    console.error('Failed to trigger order creation email:', err);
+  }
+
+  return createdOrder;
 }
 
 export async function listOrders(userId: string, role: 'CUSTOMER' | 'AGENT' | 'ADMIN') {

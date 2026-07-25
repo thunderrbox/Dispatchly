@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import prisma from '../../lib/prisma';
 import { signToken } from '../../lib/jwt';
 import { RegisterSchema, LoginSchema } from './auth.validation';
+import { sendWelcomeEmail } from '../notification/notification.service';
 import { z } from 'zod';
 
 type RegisterInput = z.infer<typeof RegisterSchema>;
@@ -62,6 +63,9 @@ export async function register(input: RegisterInput) {
 
     return user;
   });
+
+  // Send automated welcome & account creation email directly to user's inbox
+  sendWelcomeEmail(result.email, result.name, result.username, result.role);
 
   const token = signToken({ userId: result.id, username: result.username, role: result.role });
 
@@ -193,6 +197,9 @@ export async function googleAuth(input: GoogleAuthInput) {
 
       return createdUser;
     }) as any;
+
+    // Send automated welcome & account creation email directly to user's inbox
+    sendWelcomeEmail(user!.email, user!.name, user!.username, user!.role);
   }
 
   const token = signToken({ userId: user!.id, username: user!.username, role: user!.role });
