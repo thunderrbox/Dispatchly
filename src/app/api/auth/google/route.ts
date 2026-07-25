@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
       name: name || email.split('@')[0],
       role: body.role || 'CUSTOMER',
       adminSecretKey: body.adminSecretKey,
+      isLogin: body.isLogin,
     });
 
     const response = NextResponse.json(result, { status: 200 });

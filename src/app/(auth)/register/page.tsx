@@ -24,6 +24,7 @@ export default function RegisterPage() {
   const handleRegisterSuccess = (data: any) => {
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
+    document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
 
     if (data.user.role === 'ADMIN') {
       router.push('/admin/dashboard');
@@ -79,6 +80,7 @@ export default function RegisterPage() {
           email: selectedEmail,
           name: selectedName,
           role,
+          isLogin: false,
           ...(role === 'ADMIN' ? { adminSecretKey } : {}),
         }),
       });

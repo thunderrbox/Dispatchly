@@ -20,6 +20,7 @@ export default function LoginPage() {
   const handleLoginSuccess = (data: any) => {
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
+    document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
 
     const role = data.user.role;
     if (role === 'ADMIN') {
@@ -68,6 +69,7 @@ export default function LoginPage() {
         body: JSON.stringify({
           email,
           name,
+          isLogin: true,
         }),
       });
 

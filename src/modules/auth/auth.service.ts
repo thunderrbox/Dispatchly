@@ -135,12 +135,12 @@ export async function login(input: LoginInput) {
   }
 
   if (!user) {
-    throw new Error('Invalid email/username or password');
+    throw new Error('Account does not exist. Please register first.');
   }
 
   const isPasswordValid = await bcrypt.compare(parsed.password, user.passwordHash);
   if (!isPasswordValid) {
-    throw new Error('Invalid email/username or password');
+    throw new Error('Invalid password. Please check your credentials.');
   }
 
   const token = signToken({ userId: user.id, username: user.username || '', role: user.role });
@@ -165,10 +165,11 @@ export interface GoogleAuthInput {
   googleId?: string;
   role?: 'CUSTOMER' | 'AGENT' | 'ADMIN';
   adminSecretKey?: string;
+  isLogin?: boolean;
 }
 
 export async function googleAuth(input: GoogleAuthInput) {
-  const { email, name, role = 'CUSTOMER', adminSecretKey } = input;
+  const { email, name, role = 'CUSTOMER', adminSecretKey, isLogin } = input;
 
   if (role === 'ADMIN') {
     const expectedSecret = process.env.ADMIN_SECRET_KEY || 'DISPATCHLY_ADMIN_SECRET_2026';
@@ -186,6 +187,9 @@ export async function googleAuth(input: GoogleAuthInput) {
   });
 
   if (!user) {
+    if (isLogin) {
+      throw new Error('Account does not exist with this Google email. Please register first.');
+    }
     // Generate unique username from email prefix or name
     const baseUsername = cleanEmail.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '');
     let uniqueUsername = baseUsername;
