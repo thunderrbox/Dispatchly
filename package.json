@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.0.0",
+    "@react-oauth/google": "^0.13.5",
     "bcrypt": "^5.1.1",
     "framer-motion": "^12.42.2",
     "jsonwebtoken": "^9.0.2",

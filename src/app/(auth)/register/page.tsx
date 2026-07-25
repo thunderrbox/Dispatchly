@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
+import GoogleAuthModal from '../../../components/GoogleAuthModal';
+
 export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState('');
@@ -15,6 +17,7 @@ export default function RegisterPage() {
   const [adminSecretKey, setAdminSecretKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
   const [error, setError] = useState('');
 
   const handleRegisterSuccess = (data: any) => {
@@ -62,24 +65,18 @@ export default function RegisterPage() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSelectEmail = async (selectedEmail: string, selectedName: string) => {
+    setIsGoogleModalOpen(false);
     setGoogleLoading(true);
     setError('');
 
     try {
-      // Prompt user or handle Google OAuth sign-in flow
-      const userEmail = prompt('Enter your Google email address for OAuth sign-in:');
-      if (!userEmail) {
-        setGoogleLoading(false);
-        return;
-      }
-
       const res = await fetch('/api/auth/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: userEmail,
-          name: userEmail.split('@')[0],
+          email: selectedEmail,
+          name: selectedName,
           role,
           ...(role === 'ADMIN' ? { adminSecretKey } : {}),
         }),
@@ -121,7 +118,7 @@ export default function RegisterPage() {
 
         <button
           type="button"
-          onClick={handleGoogleSignIn}
+          onClick={() => setIsGoogleModalOpen(true)}
           disabled={googleLoading || loading}
           className="w-full py-3 px-4 bg-white hover:bg-[#FAF7F2] border border-[#1C1C1A]/15 text-[#1C1C1A] rounded-lg text-sm font-semibold flex items-center justify-center gap-3 transition-colors shadow-xs disabled:opacity-50"
         >
@@ -300,6 +297,12 @@ export default function RegisterPage() {
           </p>
         </div>
       </motion.div>
+
+      <GoogleAuthModal
+        isOpen={isGoogleModalOpen}
+        onClose={() => setIsGoogleModalOpen(false)}
+        onSelectEmail={handleGoogleSelectEmail}
+      />
     </div>
   );
 }
