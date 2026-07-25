@@ -137,7 +137,7 @@ describe('Auth Service', () => {
     expect(result.user.role).toBe('ADMIN');
   });
 
-  it('should authenticate user with Google auth', async () => {
+  it('should authenticate new Customer user with Google auth', async () => {
     (prisma.user.findUnique as any).mockResolvedValue(null);
 
     const googleUserEmail = 'google_user@example.com';
@@ -149,7 +149,74 @@ describe('Auth Service', () => {
 
     expect(result.user).toBeDefined();
     expect(result.user.email).toBe(googleUserEmail);
+    expect(result.user.role).toBe('CUSTOMER');
     expect(result.user.username).toBeDefined();
+    expect(result.token).toBeDefined();
+  });
+
+  it('should authenticate existing user with Google auth seamlessly', async () => {
+    const existingGoogleUser = {
+      id: 'google-user-id-123',
+      name: 'Existing Google User',
+      username: 'existing_google',
+      email: 'existing_google@example.com',
+      role: 'CUSTOMER',
+      createdAt: new Date(),
+      agentProfile: null,
+    };
+
+    (prisma.user.findUnique as any).mockResolvedValue(existingGoogleUser);
+
+    const result = await googleAuth({
+      email: existingGoogleUser.email,
+      name: existingGoogleUser.name,
+      role: 'CUSTOMER',
+    });
+
+    expect(result.user.id).toBe(existingGoogleUser.id);
+    expect(result.user.email).toBe(existingGoogleUser.email);
+    expect(result.token).toBeDefined();
+  });
+
+  it('should register new Agent via Google auth and provision DeliveryAgent record', async () => {
+    (prisma.user.findUnique as any).mockResolvedValue(null);
+
+    const agentEmail = 'new_agent@example.com';
+    const result = await googleAuth({
+      email: agentEmail,
+      name: 'New Agent',
+      role: 'AGENT',
+    });
+
+    expect(result.user).toBeDefined();
+    expect(result.user.email).toBe(agentEmail);
+    expect(result.user.role).toBe('AGENT');
+    expect(result.token).toBeDefined();
+  });
+
+  it('should reject Google auth for Admin role if admin secret key is invalid', async () => {
+    await expect(
+      googleAuth({
+        email: 'fake_admin@example.com',
+        name: 'Fake Admin',
+        role: 'ADMIN',
+        adminSecretKey: 'WRONG_SECRET',
+      })
+    ).rejects.toThrow('Invalid Admin Security Passcode');
+  });
+
+  it('should allow Google auth for Admin role if admin secret key is valid', async () => {
+    (prisma.user.findUnique as any).mockResolvedValue(null);
+
+    const result = await googleAuth({
+      email: 'admin_google@example.com',
+      name: 'Google Admin',
+      role: 'ADMIN',
+      adminSecretKey: 'DISPATCHLY_ADMIN_SECRET_2026',
+    });
+
+    expect(result.user).toBeDefined();
+    expect(result.user.role).toBe('ADMIN');
     expect(result.token).toBeDefined();
   });
 });
