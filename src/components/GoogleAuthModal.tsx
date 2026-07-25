@@ -19,12 +19,12 @@ export default function GoogleAuthModal({ isOpen, onClose, onSelectEmail }: Goog
     {
       name: 'Abhijeet Singh Rana',
       email: 'abhijeet.s.r.cse@gmail.com',
-      avatar: 'https://lh3.googleusercontent.com/a/default-user=s96-c',
+      avatar: 'A',
     },
     {
       name: 'Abhijeet Singh',
       email: 'abhijeetsingh7168768@gmail.com',
-      avatar: 'https://lh3.googleusercontent.com/a/default-user2=s96-c',
+      avatar: 'A',
     },
   ];
 
@@ -37,17 +37,18 @@ export default function GoogleAuthModal({ isOpen, onClose, onSelectEmail }: Goog
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 10 }}
+          initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 text-gray-800"
+          exit={{ opacity: 0, scale: 0.95, y: 15 }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-sm bg-[#1E1F22] rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] overflow-hidden border border-white/10 text-white font-sans"
         >
-          {/* Google Modal Header */}
-          <div className="p-6 text-center border-b border-gray-100 bg-gray-50/50">
-            <div className="flex justify-center mb-3">
-              <svg className="w-8 h-8" viewBox="0 0 24 24">
+          {/* Header */}
+          <div className="p-6 pb-4 border-b border-white/10 bg-[#1E1F22]">
+            <div className="flex items-center gap-2 mb-4">
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
@@ -65,47 +66,56 @@ export default function GoogleAuthModal({ isOpen, onClose, onSelectEmail }: Goog
                   d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.7 1.27 6.58l4.01 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
                 />
               </svg>
+              <span className="text-xs font-semibold text-white/80">Sign in with Google</span>
             </div>
-            <h3 className="text-lg font-bold text-gray-900">Choose an account</h3>
-            <p className="text-xs text-gray-500 mt-1">to continue to <span className="font-semibold text-gray-800">Dispatchly</span></p>
+            <h3 className="text-2xl font-normal text-white tracking-tight">Choose an account</h3>
+            <p className="text-xs text-white/60 mt-1">to continue to <span className="text-blue-400 font-medium">dispatchly.vercel.app</span></p>
           </div>
 
-          {/* Account Chooser List */}
-          <div className="p-4 space-y-2">
+          {/* Account List */}
+          <div className="p-4 space-y-1 bg-[#1E1F22]">
             {!showCustomInput ? (
               <>
                 {defaultAccounts.map((acc, i) => (
-                  <button
+                  <motion.button
+                    whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.06)' }}
+                    whileTap={{ scale: 0.98 }}
                     key={i}
                     type="button"
                     onClick={() => onSelectEmail(acc.email, acc.name)}
-                    className="w-full flex items-center gap-3.5 p-3 hover:bg-gray-50 rounded-xl transition-colors text-left border border-transparent hover:border-gray-200"
+                    className="w-full flex items-center gap-3.5 p-3 rounded-xl text-left border border-transparent transition-colors"
                   >
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold flex items-center justify-center text-sm shadow-xs">
-                      {acc.name[0]}
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold flex items-center justify-center text-sm shadow-sm flex-shrink-0">
+                      {acc.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-gray-900 truncate">{acc.name}</p>
-                      <p className="text-[11px] text-gray-500 truncate">{acc.email}</p>
+                      <p className="text-xs font-semibold text-white truncate">{acc.name}</p>
+                      <p className="text-[11px] text-white/60 truncate">{acc.email}</p>
                     </div>
-                  </button>
+                  </motion.button>
                 ))}
 
-                <button
+                <div className="border-t border-white/10 my-2" />
+
+                <motion.button
+                  whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.06)' }}
+                  whileTap={{ scale: 0.98 }}
                   type="button"
                   onClick={() => setShowCustomInput(true)}
-                  className="w-full flex items-center gap-3.5 p-3 hover:bg-gray-50 rounded-xl transition-colors text-left border border-dashed border-gray-200 text-xs font-semibold text-blue-600 hover:text-blue-700"
+                  className="w-full flex items-center gap-3.5 p-3 rounded-xl text-left border border-transparent text-xs font-medium text-white/90 transition-colors"
                 >
-                  <div className="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
-                    +
+                  <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-sm text-white flex-shrink-0">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
                   </div>
-                  Use another Google Account
-                </button>
+                  <span>Use another account</span>
+                </motion.button>
               </>
             ) : (
               <form onSubmit={handleCustomSubmit} className="space-y-3 p-1">
                 <div>
-                  <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">
+                  <label className="block text-[10px] uppercase font-bold text-white/60 mb-1.5">
                     Google Email Address
                   </label>
                   <input
@@ -115,20 +125,20 @@ export default function GoogleAuthModal({ isOpen, onClose, onSelectEmail }: Goog
                     value={customEmail}
                     onChange={(e) => setCustomEmail(e.target.value)}
                     placeholder="user@gmail.com"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500"
+                    className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-400 font-sans"
                   />
                 </div>
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={() => setShowCustomInput(false)}
-                    className="flex-1 py-2 text-xs font-semibold text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50"
+                    className="flex-1 py-2 text-xs font-semibold text-white/70 border border-white/15 rounded-lg hover:bg-white/5"
                   >
                     Back
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-2 text-xs font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-xs"
+                    className="flex-1 py-2 text-xs font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-500 shadow-sm"
                   >
                     Continue
                   </button>
@@ -138,9 +148,9 @@ export default function GoogleAuthModal({ isOpen, onClose, onSelectEmail }: Goog
           </div>
 
           {/* Footer */}
-          <div className="p-3 bg-gray-50 border-t border-gray-100 flex justify-between items-center text-[10px] text-gray-400 px-6">
-            <span>To continue, Google will share your name and email with Dispatchly.</span>
-            <button type="button" onClick={onClose} className="text-gray-600 hover:underline font-medium">
+          <div className="p-4 bg-[#18191B] border-t border-white/10 flex justify-between items-center text-[10px] text-white/40">
+            <span>Before using this app, review Dispatchly&apos;s Terms & Privacy.</span>
+            <button type="button" onClick={onClose} className="text-white/70 hover:text-white font-medium ml-2 flex-shrink-0">
               Cancel
             </button>
           </div>
