@@ -193,11 +193,11 @@ export default function RegisterPage() {
         </motion.button>
 
         {/* Divider */}
-        <div className="relative flex items-center justify-center my-2">
+        <div className="relative flex items-center justify-center my-4">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
             <div className="w-full border-t border-white/10" />
           </div>
-          <span className="relative z-10 bg-[#161520] px-3.5 text-[10px] uppercase font-bold text-white/40 tracking-widest text-center">
+          <span className="relative z-10 bg-[#161520] px-4 py-1 rounded-full border border-white/10 text-[10px] uppercase font-bold text-white/50 tracking-widest text-center whitespace-nowrap">
             Or Fill Registration Details
           </span>
         </div>

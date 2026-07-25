@@ -49,8 +49,12 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error: any) {
+    let errMsg = error.message || 'Google authentication failed';
+    if (errMsg.includes('prisma') || errMsg.includes('does not exist in the current database')) {
+      errMsg = 'Database schema sync in progress. Please try again in a moment.';
+    }
     return NextResponse.json(
-      { error: error.message || 'Google authentication failed' },
+      { error: errMsg },
       { status: 400 }
     );
   }

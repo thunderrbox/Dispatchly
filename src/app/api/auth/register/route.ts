@@ -26,6 +26,8 @@ export async function POST(request: NextRequest) {
     let errMsg = error.message || 'Something went wrong';
     if (errMsg.includes('DATABASE_URL') || errMsg.includes('Can\'t reach database server')) {
       errMsg = 'Database connection error: Please configure a valid DATABASE_URL in your .env file.';
+    } else if (errMsg.includes('prisma') || errMsg.includes('does not exist in the current database')) {
+      errMsg = 'Database schema sync in progress. Please try registering again in a moment.';
     }
     return NextResponse.json(
       { error: errMsg },
