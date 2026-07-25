@@ -187,9 +187,6 @@ export async function googleAuth(input: GoogleAuthInput) {
   });
 
   if (!user) {
-    if (isLogin) {
-      throw new Error('Account does not exist with this Google email. Please register first.');
-    }
     // Generate unique username from email prefix or name
     const baseUsername = cleanEmail.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '');
     let uniqueUsername = baseUsername;

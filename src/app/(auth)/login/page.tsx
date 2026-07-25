@@ -23,13 +23,14 @@ export default function LoginPage() {
     document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
 
     const role = data.user.role;
+    let target = '/customer/orders';
     if (role === 'ADMIN') {
-      router.push('/admin/dashboard');
+      target = '/admin/dashboard';
     } else if (role === 'AGENT') {
-      router.push('/agent/orders');
-    } else {
-      router.push('/customer/orders');
+      target = '/agent/orders';
     }
+
+    window.location.href = target;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

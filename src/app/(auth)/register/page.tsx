@@ -26,13 +26,15 @@ export default function RegisterPage() {
     localStorage.setItem('user', JSON.stringify(data.user));
     document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
 
-    if (data.user.role === 'ADMIN') {
-      router.push('/admin/dashboard');
-    } else if (data.user.role === 'AGENT') {
-      router.push('/agent/orders');
-    } else {
-      router.push('/customer/orders');
+    const role = data.user.role;
+    let target = '/customer/orders';
+    if (role === 'ADMIN') {
+      target = '/admin/dashboard';
+    } else if (role === 'AGENT') {
+      target = '/agent/orders';
     }
+
+    window.location.href = target;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
