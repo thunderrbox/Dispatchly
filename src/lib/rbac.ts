@@ -18,9 +18,19 @@ export function withAuth(
 ) {
   return async (request: NextRequest, context: any) => {
     try {
-      // 1. Extract Authorization header credentials
+      // 1. Extract token from Authorization header or cookie
+      let token: string | undefined;
       const authHeader = request.headers.get('authorization');
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.substring(7);
+      } else {
+        const tokenCookie = request.cookies.get('token');
+        if (tokenCookie) {
+          token = tokenCookie.value;
+        }
+      }
+
+      if (!token) {
         return NextResponse.json(
           { error: 'Unauthorized: Missing token' },
           { status: 401 }
@@ -28,7 +38,6 @@ export function withAuth(
       }
 
       // 2. Decode and verify token signature/expiry
-      const token = authHeader.substring(7);
       const decoded = verifyToken(token);
 
       // 3. Match user claims against role whitelist

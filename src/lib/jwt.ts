@@ -6,6 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-on
 // Type definition representing the structured claims stored inside the stateless session token
 export interface JwtPayload {
   userId: string;
+  username?: string;
   role: 'CUSTOMER' | 'AGENT' | 'ADMIN';
 }
 

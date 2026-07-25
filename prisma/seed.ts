@@ -24,6 +24,7 @@ async function main() {
   const admin = await prisma.user.create({
     data: {
       name: 'Abhijeet Singh Rana',
+      username: 'admin_singh',
       email: 'admin@dispatchly.test',
       passwordHash: adminPassHash,
       role: 'ADMIN',
@@ -33,6 +34,7 @@ async function main() {
   const customer1 = await prisma.user.create({
     data: {
       name: 'Aarav Sharma',
+      username: 'aarav_s',
       email: 'aarav@dispatchly.test',
       passwordHash: customerPassHash,
       role: 'CUSTOMER',
@@ -42,6 +44,7 @@ async function main() {
   const customer2 = await prisma.user.create({
     data: {
       name: 'Priya Patel',
+      username: 'priya_p',
       email: 'priya@dispatchly.test',
       passwordHash: customerPassHash,
       role: 'CUSTOMER',
@@ -51,6 +54,7 @@ async function main() {
   const agentUser1 = await prisma.user.create({
     data: {
       name: 'Amit Singh',
+      username: 'agent_amit',
       email: 'amit@dispatchly.test',
       passwordHash: agentPassHash,
       role: 'AGENT',
@@ -60,6 +64,7 @@ async function main() {
   const agentUser2 = await prisma.user.create({
     data: {
       name: 'Vikram Malhotra',
+      username: 'agent_vikram',
       email: 'vikram@dispatchly.test',
       passwordHash: agentPassHash,
       role: 'AGENT',
@@ -69,6 +74,7 @@ async function main() {
   const agentUser3 = await prisma.user.create({
     data: {
       name: 'Neha Gupta',
+      username: 'agent_neha',
       email: 'neha@dispatchly.test',
       passwordHash: agentPassHash,
       role: 'AGENT',

@@ -6,7 +6,16 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const result = await login(body);
-    return NextResponse.json(result, { status: 200 });
+    const response = NextResponse.json(result, { status: 200 });
+    response.cookies.set({
+      name: 'token',
+      value: result.token,
+      httpOnly: true,
+      path: '/',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+    });
+    return response;
   } catch (error: any) {
     if (error instanceof ZodError) {
       return NextResponse.json(
@@ -14,8 +23,12 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+    let errMsg = error.message || 'Invalid email or password';
+    if (errMsg.includes('DATABASE_URL') || errMsg.includes('Can\'t reach database server')) {
+      errMsg = 'Database connection error: Please configure a valid DATABASE_URL in your .env file.';
+    }
     return NextResponse.json(
-      { error: error.message || 'Invalid email or password' },
+      { error: errMsg },
       { status: 401 }
     );
   }
