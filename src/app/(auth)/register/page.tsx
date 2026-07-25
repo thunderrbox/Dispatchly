@@ -23,15 +23,26 @@ export default function RegisterPage() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
-    const userStr = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-    if (token && userStr) {
-      try {
-        const u = JSON.parse(userStr);
-        if (u.role === 'ADMIN') window.location.href = '/admin/dashboard';
-        else if (u.role === 'AGENT') window.location.href = '/agent/orders';
-        else if (u.role === 'CUSTOMER') window.location.href = '/customer/orders';
-      } catch (e) {}
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get('error') === 'session_expired') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        document.cookie = 'token=; max-age=0; path=/;';
+        setError('Your session has expired. Please sign in again.');
+        return;
+      }
+
+      const userStr = localStorage.getItem('user');
+      const token = localStorage.getItem('token');
+      if (token && userStr) {
+        try {
+          const u = JSON.parse(userStr);
+          if (u.role === 'ADMIN') window.location.href = '/admin/dashboard';
+          else if (u.role === 'AGENT') window.location.href = '/agent/orders';
+          else if (u.role === 'CUSTOMER') window.location.href = '/customer/orders';
+        } catch (e) {}
+      }
     }
   }, []);
 

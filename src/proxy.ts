@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from './lib/jwt';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Paths requiring protection
@@ -48,9 +48,13 @@ export function middleware(request: NextRequest) {
   } catch (error) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('error', 'session_expired');
-    return NextResponse.redirect(loginUrl);
+    const res = NextResponse.redirect(loginUrl);
+    res.cookies.delete('token');
+    return res;
   }
 }
+
+export const middleware = proxy;
 
 export const config = {
   matcher: ['/admin/:path*', '/agent/:path*', '/customer/:path*'],
