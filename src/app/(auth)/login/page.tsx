@@ -181,9 +181,11 @@ export default function LoginPage() {
         </motion.button>
 
         {/* Divider */}
-        <div className="relative flex items-center justify-center">
-          <div className="border-t border-white/10 w-full" />
-          <span className="bg-[#161520] px-3.5 text-[10px] uppercase font-bold text-white/40 tracking-widest">
+        <div className="relative flex items-center justify-center my-2">
+          <div className="absolute inset-0 flex items-center" aria-hidden="true">
+            <div className="w-full border-t border-white/10" />
+          </div>
+          <span className="relative z-10 bg-[#161520] px-3.5 text-[10px] uppercase font-bold text-white/40 tracking-widest">
             Or Sign In With Account
           </span>
         </div>
