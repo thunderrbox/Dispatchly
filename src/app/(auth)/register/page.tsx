@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -21,10 +21,24 @@ export default function RegisterPage() {
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    if (token && userStr) {
+      try {
+        const u = JSON.parse(userStr);
+        if (u.role === 'ADMIN') window.location.href = '/admin/dashboard';
+        else if (u.role === 'AGENT') window.location.href = '/agent/orders';
+        else if (u.role === 'CUSTOMER') window.location.href = '/customer/orders';
+      } catch (e) {}
+    }
+  }, []);
+
   const handleRegisterSuccess = (data: any) => {
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
-    document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
+    const isSecure = typeof window !== 'undefined' && window.location.protocol === 'https:';
+    document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax${isSecure ? '; Secure' : ''}`;
 
     const role = data.user.role;
     let target = '/customer/orders';
