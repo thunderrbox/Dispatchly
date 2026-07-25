@@ -246,7 +246,7 @@ export async function googleAuth(input: GoogleAuthInput) {
     sendWelcomeEmail(user!.email, user!.name, user!.username || user!.name, user!.role);
   }
 
-  const token = signToken({ userId: user!.id, username: user!.username, role: user!.role });
+  const token = signToken({ userId: user!.id, username: user!.username || '', role: user!.role });
 
   return {
     user: {
