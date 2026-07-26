@@ -19,8 +19,14 @@ export function proxy(request: NextRequest) {
     token = authHeader.substring(7);
   } else {
     const tokenCookie = request.cookies.get('token');
-    if (tokenCookie) {
+    if (tokenCookie && tokenCookie.value) {
       token = tokenCookie.value;
+    } else {
+      // Query param token fallback for Brave/Safari strict cookie shields
+      const queryToken = request.nextUrl.searchParams.get('token');
+      if (queryToken) {
+        token = queryToken;
+      }
     }
   }
 
@@ -44,7 +50,18 @@ export function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL('/', request.url));
     }
 
-    return NextResponse.next();
+    const response = NextResponse.next();
+    // Server-side cookie refresh on verified session
+    response.cookies.set({
+      name: 'token',
+      value: token,
+      httpOnly: true,
+      path: '/',
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60,
+    });
+    return response;
   } catch (error) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('error', 'session_expired');

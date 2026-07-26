@@ -38,9 +38,10 @@ export default function RegisterPage() {
       if (token && userStr) {
         try {
           const u = JSON.parse(userStr);
-          if (u.role === 'ADMIN') window.location.href = '/admin/dashboard';
-          else if (u.role === 'AGENT') window.location.href = '/agent/orders';
-          else if (u.role === 'CUSTOMER') window.location.href = '/customer/orders';
+          let target = '/customer/orders';
+          if (u.role === 'ADMIN') target = '/admin/dashboard';
+          else if (u.role === 'AGENT') target = '/agent/orders';
+          window.location.href = `${target}?token=${encodeURIComponent(token)}`;
         } catch (e) {}
       }
     }
@@ -63,8 +64,8 @@ export default function RegisterPage() {
     }
 
     setTimeout(() => {
-      window.location.href = target;
-    }, 1500);
+      window.location.href = `${target}?token=${encodeURIComponent(data.token)}`;
+    }, 1200);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,6 +76,7 @@ export default function RegisterPage() {
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name,
@@ -106,6 +108,7 @@ export default function RegisterPage() {
     try {
       const res = await fetch('/api/auth/google', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: selectedEmail,

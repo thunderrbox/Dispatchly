@@ -34,9 +34,10 @@ export default function LoginPage() {
       if (token && userStr) {
         try {
           const u = JSON.parse(userStr);
-          if (u.role === 'ADMIN') window.location.href = '/admin/dashboard';
-          else if (u.role === 'AGENT') window.location.href = '/agent/orders';
-          else if (u.role === 'CUSTOMER') window.location.href = '/customer/orders';
+          let target = '/customer/orders';
+          if (u.role === 'ADMIN') target = '/admin/dashboard';
+          else if (u.role === 'AGENT') target = '/agent/orders';
+          window.location.href = `${target}?token=${encodeURIComponent(token)}`;
         } catch (e) {}
       }
     }
@@ -59,8 +60,8 @@ export default function LoginPage() {
     }
 
     setTimeout(() => {
-      window.location.href = target;
-    }, 1500);
+      window.location.href = `${target}?token=${encodeURIComponent(data.token)}`;
+    }, 1200);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,6 +72,7 @@ export default function LoginPage() {
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifier, password }),
       });
@@ -95,6 +97,7 @@ export default function LoginPage() {
     try {
       const res = await fetch('/api/auth/google', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
@@ -139,7 +142,6 @@ export default function LoginPage() {
           transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
           className="absolute -bottom-32 -right-32 w-[30rem] h-[30rem] bg-gradient-to-tl from-[#6366F1]/30 to-[#8B5CF6]/20 rounded-full blur-3xl"
         />
-        {/* Grid pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
       </div>
 

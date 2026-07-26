@@ -19,8 +19,10 @@ export async function POST(request: NextRequest) {
     return response;
   } catch (error: any) {
     if (error instanceof ZodError) {
+      const fieldErrors = error.flatten().fieldErrors;
+      const firstErrorMsg = Object.values(fieldErrors).flat()[0] || 'Validation failed';
       return NextResponse.json(
-        { error: 'Validation failed', details: error.flatten().fieldErrors },
+        { error: firstErrorMsg, details: fieldErrors },
         { status: 400 }
       );
     }
