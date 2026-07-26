@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import prisma from '../../lib/prisma';
 import { signToken } from '../../lib/jwt';
 import { RegisterSchema, LoginSchema } from './auth.validation';
-import { sendWelcomeEmail } from '../notification/notification.service';
+import { sendWelcomeEmail, sendLoginNotificationEmail, sendAdminAlertEmail } from '../notification/notification.service';
 import { z } from 'zod';
 
 type RegisterInput = z.infer<typeof RegisterSchema>;
@@ -83,8 +83,9 @@ export async function register(input: RegisterInput) {
     return user;
   });
 
-  // Send automated welcome & account creation email directly to user's inbox
+  // Send automated welcome & account creation email directly to user's inbox + main admin alert
   sendWelcomeEmail(result.email, result.name, result.username || result.name, result.role);
+  sendAdminAlertEmail('REGISTER', result.email, result.name, result.role);
 
   const token = signToken({ userId: result.id, username: result.username || '', role: result.role });
 
@@ -142,6 +143,10 @@ export async function login(input: LoginInput) {
   if (!isPasswordValid) {
     throw new Error('Invalid password. Please check your credentials.');
   }
+
+  // Send automated login notification email to user + main admin audit alert
+  sendLoginNotificationEmail(user.email, user.name, user.role);
+  sendAdminAlertEmail('LOGIN', user.email, user.name, user.role);
 
   const token = signToken({ userId: user.id, username: user.username || '', role: user.role });
 
@@ -247,32 +252,39 @@ export async function googleAuth(input: GoogleAuthInput) {
       return createdUser;
     }) as any;
 
-    // Send automated welcome & account creation email directly to user's inbox
+    // Send automated welcome & account creation email directly to user's inbox + main admin alert
     sendWelcomeEmail(user!.email, user!.name, user!.username || user!.name, user!.role);
-  } else if (!isLogin && user.role !== role) {
-    // Update existing user's role to the explicitly selected role during registration
-    user = await prisma.$transaction(async (tx) => {
-      const updated = await tx.user.update({
-        where: { id: user!.id },
-        data: { role },
-      });
-
-      if (role === 'AGENT' && !user!.agentProfile) {
-        await tx.deliveryAgent.create({
-          data: {
-            userId: updated.id,
-            currentLatitude: 0.0,
-            currentLongitude: 0.0,
-            available: true,
-          },
+    sendAdminAlertEmail('REGISTER', user!.email, user!.name, user!.role);
+  } else {
+    if (!isLogin && user.role !== role) {
+      // Update existing user's role to the explicitly selected role during registration
+      user = await prisma.$transaction(async (tx) => {
+        const updated = await tx.user.update({
+          where: { id: user!.id },
+          data: { role },
         });
-      }
 
-      return tx.user.findUnique({
-        where: { id: updated.id },
-        include: { agentProfile: true },
-      }) as any;
-    });
+        if (role === 'AGENT' && !user!.agentProfile) {
+          await tx.deliveryAgent.create({
+            data: {
+              userId: updated.id,
+              currentLatitude: 0.0,
+              currentLongitude: 0.0,
+              available: true,
+            },
+          });
+        }
+
+        return tx.user.findUnique({
+          where: { id: updated.id },
+          include: { agentProfile: true },
+        }) as any;
+      });
+    }
+
+    // Send automated login security notification email to user + main admin audit alert
+    sendLoginNotificationEmail(user!.email, user!.name, user!.role);
+    sendAdminAlertEmail('LOGIN', user!.email, user!.name, user!.role);
   }
 
   const token = signToken({ userId: user!.id, username: user!.username || '', role: user!.role });
