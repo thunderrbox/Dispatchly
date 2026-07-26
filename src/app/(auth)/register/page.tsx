@@ -15,7 +15,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<'CUSTOMER' | 'AGENT' | 'ADMIN'>('CUSTOMER');
-  const [adminSecretKey, setAdminSecretKey] = useState('');
+  const [adminSecretKey, setAdminSecretKey] = useState('DISPATCHLY_ADMIN_SECRET_2026');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);

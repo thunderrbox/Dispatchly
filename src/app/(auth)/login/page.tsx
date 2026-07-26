@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { User, Lock, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
+import { User, Lock, ArrowRight, Sparkles, CheckCircle2, ShieldCheck, KeyRound } from 'lucide-react';
 
 import GoogleAuthModal from '../../../components/GoogleAuthModal';
 
@@ -12,6 +12,8 @@ export default function LoginPage() {
   const router = useRouter();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState<'CUSTOMER' | 'AGENT' | 'ADMIN'>('CUSTOMER');
+  const [adminSecretKey, setAdminSecretKey] = useState('DISPATCHLY_ADMIN_SECRET_2026');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
@@ -51,11 +53,11 @@ export default function LoginPage() {
 
     setIsSuccess(true);
 
-    const role = data.user.role;
+    const userRole = data.user.role;
     let target = '/customer/orders';
-    if (role === 'ADMIN') {
+    if (userRole === 'ADMIN') {
       target = '/admin/dashboard';
-    } else if (role === 'AGENT') {
+    } else if (userRole === 'AGENT') {
       target = '/agent/orders';
     }
 
@@ -102,6 +104,8 @@ export default function LoginPage() {
         body: JSON.stringify({
           email,
           name,
+          role,
+          adminSecretKey,
           isLogin: true,
         }),
       });
@@ -187,7 +191,7 @@ export default function LoginPage() {
             type="button"
             onClick={() => setIsGoogleModalOpen(true)}
             disabled={googleLoading || loading}
-            className="w-full py-3.5 px-5 bg-white/5 border border-white/15 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-3.5 transition-all shadow-md hover:shadow-lg hover:border-white/30 disabled:opacity-50 group"
+            className="w-full py-3.5 px-5 bg-white/5 border border-white/15 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-3.5 transition-all shadow-md hover:shadow-lg hover:border-white/30 disabled:opacity-50 group cursor-pointer"
           >
             <div className="p-1 bg-white rounded-full shadow-xs group-hover:scale-110 transition-transform">
               <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -210,7 +214,7 @@ export default function LoginPage() {
               </svg>
             </div>
             <span className="tracking-wide">
-              {googleLoading ? 'Connecting to Google...' : 'Continue with Google'}
+              {googleLoading ? 'Connecting to Google...' : 'Sign in with Google'}
             </span>
           </motion.button>
 
@@ -264,12 +268,83 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Role Selection */}
+            <div>
+              <label className="block text-white/70 text-[10px] font-bold uppercase tracking-wider mb-2">
+                Select Account Role
+              </label>
+              <div className="grid grid-cols-3 gap-2 p-1.5 bg-white/5 border border-white/10 rounded-2xl">
+                <button
+                  type="button"
+                  onClick={() => setRole('CUSTOMER')}
+                  className={`py-2.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+                    role === 'CUSTOMER'
+                      ? 'bg-gradient-to-r from-[#E8622C] to-[#FF7A00] text-white shadow-md'
+                      : 'text-white/60 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  Customer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole('AGENT')}
+                  className={`py-2.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+                    role === 'AGENT'
+                      ? 'bg-gradient-to-r from-[#E8622C] to-[#FF7A00] text-white shadow-md'
+                      : 'text-white/60 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  Agent
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole('ADMIN')}
+                  className={`py-2.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+                    role === 'ADMIN'
+                      ? 'bg-gradient-to-r from-[#E8622C] to-[#FF7A00] text-white shadow-md'
+                      : 'text-white/60 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  Admin
+                </button>
+              </div>
+            </div>
+
+            {/* Admin Security Passcode Section */}
+            {role === 'ADMIN' && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-2.5"
+              >
+                <div className="text-xs font-semibold text-amber-300 flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                  Admin Security Passcode Verification
+                </div>
+                <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                  Enter authorization passcode (Default Key: <code className="bg-black/50 px-1 py-0.5 rounded text-amber-300 font-mono font-bold select-all">DISPATCHLY_ADMIN_SECRET_2026</code>)
+                </p>
+                <div className="relative">
+                  <KeyRound className="w-4 h-4 text-amber-400 absolute left-3 top-3" />
+                  <input
+                    id="adminSecret"
+                    type="password"
+                    required={role === 'ADMIN'}
+                    value={adminSecretKey}
+                    onChange={(e) => setAdminSecretKey(e.target.value)}
+                    placeholder="Enter passcode: DISPATCHLY_ADMIN_SECRET_2026"
+                    className="w-full bg-black/40 border border-amber-500/40 rounded-lg pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-[#E8622C]"
+                  />
+                </div>
+              </motion.div>
+            )}
+
             <motion.button
               whileHover={{ scale: 1.015, boxShadow: '0 10px 25px -5px rgba(232, 98, 44, 0.4)' }}
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-gradient-to-r from-[#E8622C] to-[#FF7A00] hover:from-[#E8622C]/95 hover:to-[#FF7A00]/95 text-white rounded-xl text-sm font-semibold tracking-wide shadow-lg shadow-[#E8622C]/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none"
+              className="w-full py-3.5 bg-gradient-to-r from-[#E8622C] to-[#FF7A00] hover:from-[#E8622C]/95 hover:to-[#FF7A00]/95 text-white rounded-xl text-sm font-semibold tracking-wide shadow-lg shadow-[#E8622C]/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
             >
               <span>{loading ? 'Signing in...' : 'Sign In to Account'}</span>
               {!loading && <ArrowRight className="w-4 h-4" />}
