@@ -4,14 +4,22 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, CheckCircle2, Copy, Smartphone, QrCode, ArrowRight, ExternalLink, RefreshCw } from 'lucide-react';
 
+/**
+ * Interface representing component props required for the UPI Payment Modal.
+ */
 interface UPIPaymentModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  orderId: string;
-  amount: number;
-  onPaymentComplete: (txnId: string, method: string) => void;
+  isOpen: boolean; // Controls modal visibility overlay
+  onClose: () => void; // Parent callback to close modal window
+  orderId: string; // Unique database order ID
+  amount: number; // Final invoice billable amount in INR (₹)
+  onPaymentComplete: (txnId: string, method: string) => void; // Callback executed after successful payment verification
 }
 
+/**
+ * Dynamic UPI Payment Modal Component.
+ * Generates dynamic UPI payment URIs, renders high-resolution QR codes, provides direct app launcher deep-links
+ * for Google Pay, Paytm, and PhonePe, and handles API payment verification targeting Admin phone 9696146006.
+ */
 export default function UPIPaymentModal({
   isOpen,
   onClose,
@@ -19,43 +27,50 @@ export default function UPIPaymentModal({
   amount,
   onPaymentComplete,
 }: UPIPaymentModalProps) {
-  const [copied, setCopied] = useState(false);
-  const [selectedMethod, setSelectedMethod] = useState<'QR' | 'GPAY' | 'PAYTM' | 'PHONEPE'>('QR');
-  const [utrNumber, setUtrNumber] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [error, setError] = useState('');
+  // Local UI state variables
+  const [copied, setCopied] = useState(false); // Tracks whether UPI ID was copied to clipboard
+  const [selectedMethod, setSelectedMethod] = useState<'QR' | 'GPAY' | 'PAYTM' | 'PHONEPE'>('QR'); // Active payment method tab
+  const [utrNumber, setUtrNumber] = useState(''); // Optional 12-digit bank UTR reference number entered by user
+  const [isSubmitting, setIsSubmitting] = useState(false); // Controls loading spinner during API request
+  const [paymentSuccess, setPaymentSuccess] = useState(false); // Displays animated success screen upon confirmation
+  const [error, setError] = useState(''); // Error message banner state
 
+  // Do not render component if modal is closed
   if (!isOpen) return null;
 
+  // Admin payee configuration details (Payee: Abhijeet Singh Rana)
   const adminPhone = '9696146006';
   const adminName = 'Abhijeet Singh Rana (Dispatchly Admin)';
-  const primaryUpiId = '9696146006@paytm';
+  const primaryUpiId = '9696146006@paytm'; // Primary Admin VPA
   
-  // Format clean order reference
+  // Format shortened uppercase order reference string for clean display
   const orderRef = orderId.length > 8 ? orderId.slice(0, 8).toUpperCase() : orderId.toUpperCase();
-  const formattedAmount = amount.toFixed(2);
+  const formattedAmount = amount.toFixed(2); // Two-decimal formatted amount string (e.g. "350.50")
 
-  // Dynamic UPI URI string
+  // Construct standard Indian UPI deep-link URI pre-filled with admin payee VPA, bill amount, order reference, and currency
   const upiUri = `upi://pay?pa=${primaryUpiId}&pn=${encodeURIComponent('Dispatchly Logistics')}&am=${formattedAmount}&tr=${orderRef}&tn=${encodeURIComponent(`Dispatchly Order ${orderRef}`)}&cu=INR`;
 
-  // QR Code URL using high reliability QR generator
+  // Generate dynamic QR Code image URL using high-reliability QR Server API with custom size and dark theme colors
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(upiUri)}&color=0B0A0F&bgcolor=FFFFFF`;
 
+  // Copies Admin UPI VPA ID to system clipboard and shows feedback badge
   const copyUpiId = () => {
     navigator.clipboard.writeText(primaryUpiId);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Handles submitting payment confirmation to API route /api/orders/[id]/pay
   const handleConfirmPayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
 
+    // Generate automatic UTR transaction ID fallback if user left UTR field blank
     const finalTxnId = utrNumber.trim() || `UPI-TXN-${Date.now()}`;
 
     try {
+      // Send POST request to backend API to mark order as PAID in PostgreSQL database
       const res = await fetch(`/api/orders/${orderId}/pay`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -70,6 +85,7 @@ export default function UPIPaymentModal({
         throw new Error(data.error || 'Payment confirmation failed');
       }
 
+      // Display green success animation screen before executing parent callback
       setPaymentSuccess(true);
       setTimeout(() => {
         onPaymentComplete(finalTxnId, `UPI_${selectedMethod}`);
@@ -81,6 +97,7 @@ export default function UPIPaymentModal({
     }
   };
 
+  // Launches native mobile app deep-link (Google Pay / Paytm / PhonePe) on smartphone devices
   const launchApp = (appScheme: string) => {
     window.open(`${appScheme}://pay?pa=${primaryUpiId}&pn=Dispatchly&am=${formattedAmount}&tn=Order-${orderRef}`, '_blank');
   };
@@ -97,7 +114,7 @@ export default function UPIPaymentModal({
         >
           {!paymentSuccess ? (
             <div>
-              {/* Header */}
+              {/* Modal Header */}
               <div className="p-6 pb-4 border-b border-white/10 bg-white/5 flex justify-between items-center">
                 <div>
                   <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#E8622C] bg-[#E8622C]/10 px-2.5 py-1 rounded-full border border-[#E8622C]/20">
@@ -111,7 +128,7 @@ export default function UPIPaymentModal({
                 </div>
               </div>
 
-              {/* Body Content */}
+              {/* Modal Body */}
               <div className="p-6 space-y-5">
                 {error && (
                   <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs rounded-xl text-center">
@@ -119,7 +136,7 @@ export default function UPIPaymentModal({
                   </div>
                 )}
 
-                {/* Receiver Info Banner */}
+                {/* Receiver Admin Information Card */}
                 <div className="p-3.5 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-between text-xs">
                   <div>
                     <p className="text-[10px] text-white/50 font-bold uppercase">Payment Receiver (Admin)</p>
@@ -136,7 +153,7 @@ export default function UPIPaymentModal({
                   </button>
                 </div>
 
-                {/* Method Tabs */}
+                {/* Method Selector Tabs (QR / GPay / Paytm / PhonePe) */}
                 <div className="grid grid-cols-4 gap-1.5 p-1 bg-white/5 rounded-xl border border-white/10 text-xs">
                   <button
                     type="button"
@@ -177,11 +194,11 @@ export default function UPIPaymentModal({
                   </button>
                 </div>
 
-                {/* QR Display */}
+                {/* Dynamic QR Display Tab */}
                 {selectedMethod === 'QR' && (
                   <div className="text-center space-y-3">
                     <div className="inline-block p-4 bg-white rounded-2xl shadow-xl relative group border border-white/20">
-                      {/* Dynamic QR Code Image */}
+                      {/* Dynamic QR Code Image Pre-filled with Admin UPI Payload */}
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={qrCodeUrl}
@@ -198,7 +215,7 @@ export default function UPIPaymentModal({
                   </div>
                 )}
 
-                {/* Direct App Launch Buttons */}
+                {/* Google Pay Direct App Launcher Tab */}
                 {selectedMethod === 'GPAY' && (
                   <div className="text-center py-4 space-y-4">
                     <div className="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center mx-auto border border-white/20">
@@ -211,7 +228,7 @@ export default function UPIPaymentModal({
                     <button
                       type="button"
                       onClick={() => launchApp('gpay')}
-                      className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2"
+                      className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span>Open Google Pay App</span>
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -219,6 +236,7 @@ export default function UPIPaymentModal({
                   </div>
                 )}
 
+                {/* Paytm Direct App Launcher Tab */}
                 {selectedMethod === 'PAYTM' && (
                   <div className="text-center py-4 space-y-4">
                     <div className="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center mx-auto border border-white/20">
@@ -231,7 +249,7 @@ export default function UPIPaymentModal({
                     <button
                       type="button"
                       onClick={() => launchApp('paytmmp')}
-                      className="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2"
+                      className="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span>Open Paytm App</span>
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -239,6 +257,7 @@ export default function UPIPaymentModal({
                   </div>
                 )}
 
+                {/* PhonePe Direct App Launcher Tab */}
                 {selectedMethod === 'PHONEPE' && (
                   <div className="text-center py-4 space-y-4">
                     <div className="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center mx-auto border border-white/20">
@@ -251,7 +270,7 @@ export default function UPIPaymentModal({
                     <button
                       type="button"
                       onClick={() => launchApp('phonepe')}
-                      className="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2"
+                      className="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span>Open PhonePe App</span>
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -259,7 +278,7 @@ export default function UPIPaymentModal({
                   </div>
                 )}
 
-                {/* UTR Entry & Form Submission */}
+                {/* UTR Entry & Form Submission Button */}
                 <form onSubmit={handleConfirmPayment} className="space-y-3 pt-2">
                   <div>
                     <label className="block text-[10px] uppercase font-bold text-white/60 mb-1">
@@ -278,14 +297,14 @@ export default function UPIPaymentModal({
                     <button
                       type="button"
                       onClick={onClose}
-                      className="flex-1 py-3 text-xs font-bold text-white/70 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all"
+                      className="flex-1 py-3 text-xs font-bold text-white/70 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all cursor-pointer"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="flex-2 py-3 bg-[#E8622C] hover:bg-[#FF7A00] text-white rounded-xl text-xs font-bold shadow-lg shadow-[#E8622C]/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="flex-2 py-3 bg-[#E8622C] hover:bg-[#FF7A00] text-white rounded-xl text-xs font-bold shadow-lg shadow-[#E8622C]/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
                     >
                       {isSubmitting ? (
                         <>
@@ -303,7 +322,7 @@ export default function UPIPaymentModal({
                 </form>
               </div>
 
-              {/* Footer */}
+              {/* Security Shield Footer */}
               <div className="p-3 bg-white/5 border-t border-white/10 text-center text-[10px] text-white/40">
                 <ShieldCheck className="w-3.5 h-3.5 inline mr-1 text-emerald-400" />
                 Protected by Dispatchly Immutable Order Payment Ledger
