@@ -85,9 +85,9 @@ Create a `.env` file at the root directory:
 ```env
 DATABASE_URL="postgresql://<user>:<password>@<host>/<database>?sslmode=require"
 DIRECT_URL="postgresql://<user>:<password>@<host>/<database>?sslmode=require"
-JWT_SECRET="dispatchly-random-security-key-32-chars-minimum"
-ADMIN_SECRET_KEY="DISPATCHLY_ADMIN_SECRET_2026"
-RESEND_API_KEY="re_your_api_key"
+JWT_SECRET="<your_jwt_secret_key_32_chars_min>"
+ADMIN_SECRET_KEY="<your_admin_authorization_passcode>"
+RESEND_API_KEY="<your_resend_api_key>"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
@@ -113,21 +113,18 @@ The database seeder is preconfigured with Indian users, localized cities (Uttar 
 - **Uttar Pradesh (UP) Zone**: Kanpur (Sub-localities: *Barra*, *Kidwai Nagar*), Lucknow.
 - **National Capital Region (NCR) Zone**: Noida, Delhi, Gurugram.
 
-### Seeded Credentials & Admin Security Key
+### Seeded Credentials
 
-> [!IMPORTANT]  
-> **Admin Registration Security Passcode**:  
-> To register or authenticate a new account with the **Admin (`ADMIN`)** role via Google Auth or Username Registration, enter the system Admin Security Passcode:  
-> **`DISPATCHLY_ADMIN_SECRET_2026`**
+| Role | Name | Email | Password |
+|---|---|---|---|
+| **Admin** | Abhijeet Singh Rana | `admin@dispatchly.test` | `Admin@123` |
+| **Customer** | Aarav Sharma | `aarav@dispatchly.test` | `Customer@123` |
+| **Customer** | Priya Patel | `priya@dispatchly.test` | `Customer@123` |
+| **Courier Agent 1 (Online)** | Amit Singh | `amit@dispatchly.test` | `Agent@123` |
+| **Courier Agent 2 (Online)** | Vikram Malhotra | `vikram@dispatchly.test` | `Agent@123` |
+| **Courier Agent 3 (Offline)** | Neha Gupta | `neha@dispatchly.test` | `Agent@123` |
 
-| Role | Name | Email | Password | Admin Security Key |
-|---|---|---|---|---|
-| **Admin** | Abhijeet Singh Rana | `admin@dispatchly.test` | `Admin@123` | `DISPATCHLY_ADMIN_SECRET_2026` |
-| **Customer** | Aarav Sharma | `aarav@dispatchly.test` | `Customer@123` | N/A |
-| **Customer** | Priya Patel | `priya@dispatchly.test` | `Customer@123` | N/A |
-| **Courier Agent 1 (Online)** | Amit Singh | `amit@dispatchly.test` | `Agent@123` | N/A |
-| **Courier Agent 2 (Online)** | Vikram Malhotra | `vikram@dispatchly.test` | `Agent@123` | N/A |
-| **Courier Agent 3 (Offline)** | Neha Gupta | `neha@dispatchly.test` | `Agent@123` | N/A |
+*Note: Registering an Admin account requires entering the `ADMIN_SECRET_KEY` configured in your environment variables.*
 
 ---
 
@@ -143,8 +140,10 @@ $$\text{Final Price} = (\text{Billable Weight} \times \text{Price Per Kg}) + \te
 
 ### 2. Dynamic Admin UPI Payment System
 Payment URIs construct a dynamic payee payload targeting Admin account `9696146006`:
-$$\text{URI} = \texttt{upi://pay?pa=9696146006@paytm\&pn=Dispatchly\&am=}\text{Amount}\texttt{\&tr=}\text{OrderRef}$$
-Rendered dynamically into a QR Code image for scanning with any UPI app (Google Pay, Paytm, PhonePe, BHIM).
+```text
+upi://pay?pa=9696146006@paytm&pn=Dispatchly&am={Amount}&tr={OrderRef}&cu=INR
+```
+Rendered dynamically into a high-resolution QR Code image for scanning with any UPI app (Google Pay, Paytm, PhonePe, BHIM).
 
 ### 3. Auto-Assignment Matcher
 Available agents (`available = true`) are evaluated using the geodesic **Haversine formula** from the shipment origin:
