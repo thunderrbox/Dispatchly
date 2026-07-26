@@ -10,7 +10,7 @@
 
 **Smart delivery orchestration, from rate to doorstep.**
 
-Dispatchly is a high-performance, full-stack logistics portal designed to solve the structural opacity and coordination overhead of last-mile delivery. Utilizing a clean, layered service-oriented architecture, it automates parcel pricing via exact volumetric calculation cards, routes courier matching using GPS-nearest Haversine sorting, and logs every delivery transition inside an immutable tracking log with audit override tracks.
+Dispatchly is a high-performance, full-stack logistics portal designed to solve the structural opacity and coordination overhead of last-mile delivery. Utilizing a clean, layered service-oriented architecture, it automates parcel pricing via exact volumetric calculation cards, routes courier matching using GPS-nearest Haversine sorting, logs every delivery transition inside an immutable tracking log with audit override tracks, and integrates a direct Google Pay/Paytm UPI dynamic QR payment system attached to Admin account `9696146006`.
 
 ---
 
@@ -19,9 +19,9 @@ Dispatchly is a high-performance, full-stack logistics portal designed to solve 
 Logistics operators struggle with three core issues in last-mile delivery:
 - **Rate Surcharge Opacity**: Shipments are often incorrectly billed due to failure to account for dimensions (volumetric weight) vs. actual weight, causing margin leaks on large, lightweight items.
 - **Assignment Delays**: Manually identifying and dispatching agents to pickup points leads to bottlenecks, unequal workloads, and high transit times.
-- **Audit Tampering**: Operators lack a secure, chronological ledger of parcel history, making it difficult to analyze failed deliveries, customer claims, or dispatch mistakes.
+- **Audit Tampering & Payment Friction**: Operators lack a secure, chronological ledger of parcel history and dynamic digital checkout, making payment collection and dispatch tracking inefficient.
 
-Dispatchly fixes this by providing automated billing, automated dispatching, and an immutable tracking event timeline.
+Dispatchly fixes this by providing automated billing, automated dispatching, dynamic UPI QR checkout attached to Admin, and an immutable tracking event timeline.
 
 ---
 
@@ -35,19 +35,25 @@ Dispatchly implements a **Layered Service-Oriented Architecture**:
 
 - **Thin Controllers**: Next.js API Routes parse requests, validate JWT tokens, enforce RBAC, and handle raw HTTP responses.
 - **Service Layer**: House business rules (e.g. rate calculations, Haversine checks, state transitions). Isolated from HTTP details for unit-testing.
-- **Prisma ORM**: Directly manages the database access. There is **no repository-interface layer** on top of Prisma; doing so would introduce redundant boilerplate without adding value at this scale.
+- **Prisma ORM**: Directly manages the database access with PostgreSQL on Neon Serverless.
 
 ---
 
 ## 3. Major Features
 
+- **Google Pay, Paytm, & Dynamic UPI QR System**:
+  - Direct payee attachment to Admin account `9696146006` (`9696146006@paytm`).
+  - Dynamic QR code generation pre-filled with exact calculated shipment amount and order reference ID.
+  - Direct launch buttons for Google Pay, Paytm, and PhonePe.
+- **Google OAuth & Username Authentication**:
+  - Google Account Chooser with native dark theme UI and smooth animated success state modal.
+  - Role-based account creation (`CUSTOMER`, `AGENT`, `ADMIN`) with auto-provisioned `DeliveryAgent` profiles.
 - **Pricing Engine**: Checks category (B2B/B2C), route type (intra/inter zone), billable weights, and COD flat charges in a pure, testable function.
 - **Haversine Matcher**: Queries online couriers, calculates geodesic distance, and auto-assigns the nearest candidate.
 - **Tie-Breaker Dispatch**: Evaluates active delivery loads to prevent courier burnout.
 - **Immutable Log**: Logs every status transition to an insert-only tracking ledger.
 - **Admin Overrides**: Empowers dispatchers to fix state mistakes while explicitly flagging overrides (`isOverride = true`).
-- **Role-Based Portals**: Displays clean workspaces customized for Customers, Courier Agents, and Admin dispatchers.
-- **Resend Mail Notifications**: Triggers HTML update letters on every status transition.
+- **Role-Based Portals**: Displays clean, distinct workspaces customized for Customers (`/customer/orders`), Courier Agents (`/agent/orders`), and Admin dispatchers (`/admin/dashboard`).
 
 ---
 
@@ -67,7 +73,7 @@ Dispatchly implements a **Layered Service-Oriented Architecture**:
 
 ### 1. Prerequisites
 - Node.js (v18.0.0 or higher)
-- PostgreSQL database instance
+- PostgreSQL database instance (Neon / Local)
 
 ### 2. Install Dependencies
 ```bash
@@ -80,6 +86,7 @@ Create a `.env` file at the root directory:
 DATABASE_URL="postgresql://<user>:<password>@<host>/<database>?sslmode=require"
 DIRECT_URL="postgresql://<user>:<password>@<host>/<database>?sslmode=require"
 JWT_SECRET="dispatchly-random-security-key-32-chars-minimum"
+ADMIN_SECRET_KEY="DISPATCHLY_ADMIN_SECRET_2026"
 RESEND_API_KEY="re_your_api_key"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
@@ -87,7 +94,7 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ### 4. Database Sync & Seed
 Deploy migrations and populate tables:
 ```bash
-npx prisma migrate dev --name init
+npx prisma db push
 npx prisma db seed
 ```
 
@@ -129,36 +136,28 @@ $$\text{Billable Weight} = \max(\text{Actual Weight}, \text{Volumetric Weight})$
 If the pickup area and drop area share a parent Zone, the route is classified as `INTRA_ZONE`. Otherwise, it is classified as `INTER_ZONE`. Surcharges are calculated as:
 $$\text{Final Price} = (\text{Billable Weight} \times \text{Price Per Kg}) + \text{Flat COD Charge (if payment is Cash on Delivery)}$$
 
-### 2. Auto-Assignment Matcher
+### 2. Dynamic Admin UPI Payment System
+Payment URIs construct a dynamic payee payload targeting Admin account `9696146006`:
+$$\text{URI} = \texttt{upi://pay?pa=9696146006@paytm\&pn=Dispatchly\&am=}\text{Amount}\texttt{\&tr=}\text{OrderRef}$$
+Rendered dynamically into a QR Code image for scanning with any UPI app (Google Pay, Paytm, PhonePe, BHIM).
+
+### 3. Auto-Assignment Matcher
 Available agents (`available = true`) are evaluated using the geodesic **Haversine formula** from the shipment origin:
 $$d = 2R \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta\phi}{2}\right) + \cos(\phi_1)\cos(\phi_2)\sin^2\left(\frac{\Delta\lambda}{2}\right)}\right)$$
 - **Tie-Breaker Rule**: If multiple agents share the same distance, the system selects the agent with the **fewest active orders** to balance driver workloads.
 
-### 3. Order Status State Machine
+### 4. Order Status State Machine
 Order statuses follow a strict sequence of transitions:
 `CREATED` ──► `PICKED_UP` ──► `IN_TRANSIT` ──► `OUT_FOR_DELIVERY` ──► `DELIVERED`
 
-- **Failed Deliveries**: If delivery fails, status changes to `FAILED`. A Customer or Admin can then reschedule the order for a future date, which moves status to `RESCHEDULED` and clears the previous courier assignment.
-- **Admin Overrides**: Administrators can change statuses out-of-sequence. When this happens, the service processes the update but flags the history event with `isOverride: true`.
-
 ---
 
-## 8. Database Schema Summary
+## 8. API Reference
 
-- **User**: Contains core credentials, role type (`CUSTOMER`, `AGENT`, `ADMIN`), and password hashes.
-- **Zone & Area**: Represents regional hierarchies. One Zone can contain multiple Areas.
-- **RateCard**: Stores rate profiles based on order category (`B2B`/`B2C`) and route distance type (`INTRA_ZONE`/`INTER_ZONE`).
-- **DeliveryAgent**: Keeps track of driver availability, duty states, and real-time coordinates.
-- **Order**: Represents the shipment record, storing dimensions, billable amounts, current status, and assigned courier.
-- **TrackingEvent**: Audit-safe logging table. Entries are strictly **insert-only**; database triggers and API constraints block all updates or deletes.
-
----
-
-## 9. API Reference
-
-### Public Routes
-- `POST /api/auth/register` - Create user.
-- `POST /api/auth/login` - Authenticate user and receive JWT.
+### Public & Auth Routes
+- `POST /api/auth/register` - Create user with role selection.
+- `POST /api/auth/login` - Authenticate user via username or email and receive JWT.
+- `POST /api/auth/google` - Google OAuth authentication & account provisioning.
 
 ### Administrative Routes (ADMIN scope)
 - `POST /api/zones` - Register new Delivery Zone.
@@ -169,9 +168,10 @@ Order statuses follow a strict sequence of transitions:
 - `GET /api/agents` - Monitor all courier locations and active workloads.
 - `GET /api/admin/dashboard` - Retrieve aggregated dashboard counters.
 
-### Shared & Scoped Routes
+### Customer & Courier Routes
 - `POST /api/rate-cards/calculate` - Estimate parcel shipping pricing.
 - `POST /api/orders` - Book shipment.
+- `POST /api/orders/:id/pay` - Record UPI payment and transaction UTR reference.
 - `GET /api/orders` - Scoped lookup (Admins see all, Customers see own, Agents see assigned).
 - `PATCH /api/orders/:id/status` - Move order through state machine (Agent/Admin).
 - `POST /api/orders/:id/reschedule` - Reschedule failed shipments (Customer/Admin).
@@ -179,31 +179,15 @@ Order statuses follow a strict sequence of transitions:
 
 ---
 
-## 10. Running Unit Tests
+## 9. Running Unit Tests
 
-The rate engine's mathematical rules are verified via unit tests:
+The test suite verifies rate calculations, authentication, and payment workflows:
 ```bash
 npm test
 ```
 
 ---
 
-## 11. Technical Design Tradeoffs & Interview Prep
-
-### 1. Stateless JWT Sessions vs. Database Sessions
-- **Tradeoff**: We use stateless, 7-day JWT tokens stored in localStorage. This eliminates session table reads on every API call, making operations fast. 
-- **Consequence**: We cannot instantly revoke a token if a user's role changes mid-session. For a high-security context, we would need to switch to Redis-backed session stores or implement short-lived tokens with rotating refresh loops.
-
-### 2. Pure Memory Rate Engine vs. Database Computations
-- **Tradeoff**: The pricing engine performs calculations in-memory, querying only static rate cards from the database. 
-- **Why**: This keeps pricing logic deterministic, incredibly fast, and easy to unit-test with mock data. It guarantees that calculations are correct before any database writes are committed.
-
-### 3. Nearest-Neighbor Haversine vs. Routing API (OSRM)
-- **Tradeoff**: We calculate geographic distance as a straight line on a sphere rather than querying real road routing matrices.
-- **Why**: Haversine computes in microseconds with zero external API dependencies or network latency, serving as an excellent MVP approximation. In production, this would serve as a pre-filtering layer before calling a mapping service like OSRM or Google Maps.
-
----
-
-## 12. Developer Profile
+## 10. Developer Profile
 Developed by **Abhijeet Singh Rana** (Senior Software Engineer / Placement Candidate).
 - Focus areas: High-performance microservices, spatial query optimization, and distributed transaction state machines.

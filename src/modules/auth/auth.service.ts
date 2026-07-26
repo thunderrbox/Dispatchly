@@ -245,6 +245,30 @@ export async function googleAuth(input: GoogleAuthInput) {
 
     // Send automated welcome & account creation email directly to user's inbox
     sendWelcomeEmail(user!.email, user!.name, user!.username || user!.name, user!.role);
+  } else if (!isLogin && user.role !== role) {
+    // Update existing user's role to the explicitly selected role during registration
+    user = await prisma.$transaction(async (tx) => {
+      const updated = await tx.user.update({
+        where: { id: user!.id },
+        data: { role },
+      });
+
+      if (role === 'AGENT' && !user!.agentProfile) {
+        await tx.deliveryAgent.create({
+          data: {
+            userId: updated.id,
+            currentLatitude: 0.0,
+            currentLongitude: 0.0,
+            available: true,
+          },
+        });
+      }
+
+      return tx.user.findUnique({
+        where: { id: updated.id },
+        include: { agentProfile: true },
+      }) as any;
+    });
   }
 
   const token = signToken({ userId: user!.id, username: user!.username || '', role: user!.role });
