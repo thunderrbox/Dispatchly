@@ -171,13 +171,6 @@ export interface GoogleAuthInput {
 export async function googleAuth(input: GoogleAuthInput) {
   const { email, name, role = 'CUSTOMER', adminSecretKey, isLogin } = input;
 
-  if (role === 'ADMIN') {
-    const expectedSecret = process.env.ADMIN_SECRET_KEY || 'DISPATCHLY_ADMIN_SECRET_2026';
-    if (!adminSecretKey || adminSecretKey.trim() !== expectedSecret.trim()) {
-      throw new Error('Invalid Admin Security Passcode. You are not authorized to log in or register as Admin.');
-    }
-  }
-
   const cleanEmail = email.toLowerCase().trim();
 
   // Check if user already exists by email
@@ -185,6 +178,17 @@ export async function googleAuth(input: GoogleAuthInput) {
     where: { email: cleanEmail },
     include: { agentProfile: true },
   });
+
+  if (role === 'ADMIN') {
+    const expectedSecret = process.env.ADMIN_SECRET_KEY || 'DISPATCHLY_ADMIN_SECRET_2026';
+    const isExistingAdmin = user && user.role === 'ADMIN';
+
+    if (!isExistingAdmin) {
+      if (!adminSecretKey || adminSecretKey.trim() !== expectedSecret.trim()) {
+        throw new Error('Invalid Admin Security Passcode. You are not authorized to log in or register as Admin.');
+      }
+    }
+  }
 
   if (!user) {
     // Generate unique username from email prefix or name

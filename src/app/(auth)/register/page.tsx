@@ -366,8 +366,8 @@ export default function RegisterPage() {
                   <ShieldCheck className="w-4 h-4 text-amber-400 flex-shrink-0" />
                   Admin Security Passcode Verification
                 </div>
-                <p className="text-[11px] text-amber-200/70 leading-relaxed">
-                  Creating an Admin account requires system authorization key verification.
+                <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                  Enter authorization passcode (Default Key: <code className="bg-black/50 px-1 py-0.5 rounded text-amber-300 font-mono font-bold select-all">DISPATCHLY_ADMIN_SECRET_2026</code>)
                 </p>
                 <div className="relative">
                   <KeyRound className="w-4 h-4 text-amber-400 absolute left-3 top-3" />
@@ -377,7 +377,7 @@ export default function RegisterPage() {
                     required={role === 'ADMIN'}
                     value={adminSecretKey}
                     onChange={(e) => setAdminSecretKey(e.target.value)}
-                    placeholder="Enter system admin passcode"
+                    placeholder="Enter passcode: DISPATCHLY_ADMIN_SECRET_2026"
                     className="w-full bg-black/40 border border-amber-500/40 rounded-lg pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-[#E8622C]"
                   />
                 </div>
