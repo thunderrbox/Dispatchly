@@ -188,7 +188,7 @@ export async function googleAuth(input: GoogleAuthInput) {
 
   if (!user) {
     // Generate unique username from email prefix or name
-    const baseUsername = cleanEmail.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '');
+    const baseUsername = cleanEmail.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '') || 'user';
     let uniqueUsername = baseUsername;
     let counter = 1;
 
