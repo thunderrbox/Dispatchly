@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import UPIPaymentModal from '@/components/UPIPaymentModal';
 
 interface Area {
   id: string;
@@ -474,105 +475,15 @@ export default function CreateOrderPage() {
 
       {/* Checkout Transaction Modal */}
       {showPaymentModal && preview && (
-        <div className="fixed inset-0 bg-[#121210]/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white border border-foreground/10 max-w-sm w-full rounded-2xl p-6 shadow-xl space-y-6 text-center text-foreground font-sans"
-          >
-            <div>
-              <h3 className="text-lg font-display font-extrabold text-foreground">Secure Payment Gateway</h3>
-              <p className="text-xs text-foreground/50 mt-1">Select UPI method to complete booking</p>
-            </div>
-
-            {/* Payment Method Switcher */}
-            <div className="grid grid-cols-2 gap-2 p-1 bg-background border border-foreground/5 rounded-xl">
-              <button
-                type="button"
-                onClick={() => setSelectedMethod('GPAY')}
-                className={`py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  selectedMethod === 'GPAY'
-                    ? 'bg-accent text-background shadow-sm'
-                    : 'text-foreground/60 hover:text-foreground'
-                }`}
-              >
-                Google Pay
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedMethod('PAYTM')}
-                className={`py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  selectedMethod === 'PAYTM'
-                    ? 'bg-accent text-background shadow-sm'
-                    : 'text-foreground/60 hover:text-foreground'
-                }`}
-              >
-                Paytm
-              </button>
-            </div>
-
-            {/* Simulated QR Code for scanner */}
-            <div className="bg-background border border-foreground/10 rounded-xl p-4 flex flex-col items-center justify-center space-y-3">
-              <div className="h-36 w-36 bg-white border border-foreground/5 p-2 rounded-lg relative flex items-center justify-center shadow-inner">
-                {/* Simulated QR code grid pattern */}
-                <div className="w-full h-full opacity-80 flex flex-col justify-between p-2">
-                  <div className="flex justify-between">
-                    <div className="border-t-4 border-l-4 border-foreground w-6 h-6"></div>
-                    <div className="border-t-4 border-r-4 border-foreground w-6 h-6"></div>
-                  </div>
-                  <div className="self-center bg-accent/20 px-2 py-1 rounded">
-                    <span className="text-[10px] font-bold text-accent">{selectedMethod}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <div className="border-b-4 border-l-4 border-foreground w-6 h-6"></div>
-                    <div className="border-b-4 border-r-4 border-foreground w-6 h-6"></div>
-                  </div>
-                </div>
-              </div>
-              <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-wider">Scan QR using phone app</p>
-            </div>
-
-            {/* Booking price and timer */}
-            <div className="space-y-1 bg-background border border-foreground/10 p-3.5 rounded-xl">
-              <p className="text-2xl font-display font-black text-accent">₹{preview.finalAmount.toFixed(2)}</p>
-              <p className="text-xs font-semibold text-foreground/60">
-                Expires in: <span className="font-mono text-rose-500 font-extrabold">{Math.floor(paymentTimer / 60)}:{(paymentTimer % 60).toString().padStart(2, '0')}</span>
-              </p>
-            </div>
-
-            {/* Simulation button */}
-            <div className="space-y-2">
-              <button
-                type="button"
-                onClick={async () => {
-                  setPaymentSimulating(true);
-                  await new Promise((resolve) => setTimeout(resolve, 1500));
-                  const txId = `${selectedMethod}-TXN-${Math.floor(10000000 + Math.random() * 90000000)}`;
-                  await handleCompleteOrder(txId);
-                }}
-                disabled={paymentSimulating}
-                className="w-full py-3 bg-[#1C1C1A] text-white hover:bg-black rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
-              >
-                {paymentSimulating ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
-                    Verifying Payment...
-                  </>
-                ) : (
-                  `Simulate Pay via ${selectedMethod === 'GPAY' ? 'Google Pay' : 'Paytm'}`
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setShowPaymentModal(false)}
-                className="w-full py-2 text-xs font-bold text-foreground/50 hover:text-foreground transition-colors cursor-pointer"
-              >
-                Cancel Transaction
-              </button>
-            </div>
-          </motion.div>
-        </div>
+        <UPIPaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          orderId={`ORD-${Date.now().toString().slice(-6)}`}
+          amount={preview.finalAmount}
+          onPaymentComplete={(txnId, method) => {
+            handleCompleteOrder(txnId);
+          }}
+        />
       )}
     </div>
   );

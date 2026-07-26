@@ -116,6 +116,10 @@ model Order {
   assignedAgent    DeliveryAgent?  @relation(fields: [assignedAgentId], references: [id], onDelete: SetNull)
   status           OrderStatus     @default(CREATED)
   transactionId    String?
+  isPaid           Boolean         @default(false)
+  paymentMethod    String?
+  paymentTxnId     String?
+  paidAt           DateTime?
   createdAt        DateTime        @default(now())
 
   trackingEvents TrackingEvent[]

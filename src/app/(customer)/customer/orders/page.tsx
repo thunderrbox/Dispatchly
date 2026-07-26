@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { CreditCard, CheckCircle2, QrCode } from 'lucide-react';
+import UPIPaymentModal from '@/components/UPIPaymentModal';
 
 interface Order {
   id: string;
@@ -12,6 +14,9 @@ interface Order {
   billableWeight: number;
   finalAmount: number;
   status: string;
+  isPaid?: boolean;
+  paymentMethod?: string;
+  paymentTxnId?: string;
   createdAt: string;
   assignedAgent?: { user: { name: string } };
 }
@@ -20,6 +25,9 @@ export default function CustomerOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Payment Modal state
+  const [selectedPaymentOrder, setSelectedPaymentOrder] = useState<Order | null>(null);
 
   const fetchOrders = async () => {
     try {
@@ -72,7 +80,7 @@ export default function CustomerOrdersPage() {
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
             My Shipments
           </h1>
-          <p className="text-slate-400 text-sm mt-1">Track and manage your created delivery requests</p>
+          <p className="text-slate-400 text-sm mt-1">Track, manage & pay for your delivery requests</p>
         </div>
         <Link
           href="/customer/orders/create"
@@ -113,6 +121,7 @@ export default function CustomerOrdersPage() {
                   <th className="py-3 px-4">Order ID</th>
                   <th className="py-3 px-4">Route</th>
                   <th className="py-3 px-4 text-center">Status</th>
+                  <th className="py-3 px-4 text-center">Payment</th>
                   <th className="py-3 px-4 text-right">Billable Weight</th>
                   <th className="py-3 px-4 text-right">Final Amount</th>
                   <th className="py-3 px-4 text-center">Created At</th>
@@ -139,6 +148,25 @@ export default function CustomerOrdersPage() {
                         {order.status}
                       </span>
                     </td>
+                    
+                    {/* Payment Status & UPI Pay Button */}
+                    <td className="py-3.5 px-4 text-center">
+                      {order.isPaid ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                          PAID
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => setSelectedPaymentOrder(order)}
+                          className="inline-flex items-center gap-1.5 py-1 px-2.5 bg-[#E8622C]/10 hover:bg-[#E8622C] text-[#E8622C] hover:text-white rounded-lg text-xs font-bold transition-all border border-[#E8622C]/30 shadow-xs"
+                        >
+                          <QrCode className="w-3.5 h-3.5" />
+                          <span>Pay UPI / QR</span>
+                        </button>
+                      )}
+                    </td>
+
                     <td className="py-3.5 px-4 text-right font-medium">{order.billableWeight.toFixed(2)} kg</td>
                     <td className="py-3.5 px-4 text-right font-bold text-violet-400">₹{order.finalAmount.toFixed(2)}</td>
                     <td className="py-3.5 px-4 text-center text-xs text-slate-550">
@@ -150,12 +178,22 @@ export default function CustomerOrdersPage() {
                       })}
                     </td>
                     <td className="py-3.5 px-4 text-right">
-                      <Link
-                        href={`/customer/orders/${order.id}`}
-                        className="py-1 px-3 bg-violet-600/10 hover:bg-violet-600 text-violet-400 hover:text-white rounded-lg text-xs font-semibold transition-all border border-violet-500/20"
-                      >
-                        Track
-                      </Link>
+                      <div className="flex items-center justify-end gap-2">
+                        {!order.isPaid && (
+                          <button
+                            onClick={() => setSelectedPaymentOrder(order)}
+                            className="py-1 px-2.5 bg-[#E8622C] text-white rounded-lg text-xs font-bold hover:bg-[#FF7A00] transition-all shadow-sm"
+                          >
+                            Pay
+                          </button>
+                        )}
+                        <Link
+                          href={`/customer/orders/${order.id}`}
+                          className="py-1 px-3 bg-violet-600/10 hover:bg-violet-600 text-violet-400 hover:text-white rounded-lg text-xs font-semibold transition-all border border-violet-500/20"
+                        >
+                          Track
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -164,6 +202,19 @@ export default function CustomerOrdersPage() {
           </div>
         )}
       </div>
+
+      {/* UPI Payment Modal */}
+      {selectedPaymentOrder && (
+        <UPIPaymentModal
+          isOpen={!!selectedPaymentOrder}
+          onClose={() => setSelectedPaymentOrder(null)}
+          orderId={selectedPaymentOrder.id}
+          amount={selectedPaymentOrder.finalAmount}
+          onPaymentComplete={() => {
+            fetchOrders();
+          }}
+        />
+      )}
     </div>
   );
 }
